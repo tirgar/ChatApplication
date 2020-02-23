@@ -17,8 +17,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent=parent)
 
         self.setWindowTitle("main window")
-        self.setMaximumSize(800, 800)
-        self.setMinimumSize(800, 800)
+        
+        self.setAccessibleName(main_window_styles[0])
+        self.setStyleSheet(main_window_styles[1])
 
         self.__set_main_widget__()
 
@@ -28,19 +29,12 @@ class MainWindow(QMainWindow):
         """
         main_widget = QWidget(self)
         main_widget.setContentsMargins(0, 0, 0, 0)
-        main_widget_layout = QVBoxLayout()
+
+        # add widget to main widget
+        main_widget_layout = QGridLayout(main_widget)
         main_widget_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.group_box = QGroupBox("Server Info")
-        self.grid_layout = QGridLayout()
-        self.group_box.setContentsMargins(0, 0, 0, 0)
-        self.group_box.setLayout(self.grid_layout)
-
-        main_widget_layout.addWidget(self.group_box)
-
         self.setCentralWidget(main_widget)
-
-        self.__add__input__()
 
     def __add__input__(self):
         """
