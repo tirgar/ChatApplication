@@ -5,11 +5,12 @@
 
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QWidget, QGridLayout,
-    QTableWidget, QApplication, QVBoxLayout, QGroupBox,
-    QLineEdit,
+    QTableWidget, QApplication, QVBoxLayout, QLabel,
+    QLineEdit, QTableWidgetItem
 )
 
 from src.gui.styles.windows.main_window_style import *
+from src.gui.components.message_box import MessageBox
 
 
 class MainWindow(QMainWindow):
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent=parent)
 
         self.setWindowTitle("main window")
+        self.setContentsMargins(0, 0, 0, 0)
         
         self.setAccessibleName(main_window_styles[0])
         self.setStyleSheet(main_window_styles[1])
@@ -31,12 +33,14 @@ class MainWindow(QMainWindow):
         main_widget.setContentsMargins(0, 0, 0, 0)
 
         # add widget to main widget
-        main_widget_layout = QGridLayout(main_widget)
-        main_widget_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_widget_layout = QGridLayout(main_widget)
+        self.main_widget_layout.setContentsMargins(0, 0, 0, 0)
 
         self.setCentralWidget(main_widget)
+        self.__add__widget__()
+        self.__add_table__()
 
-    def __add__input__(self):
+    def __add__widget__(self):
         """
         this function add layout with buttons widgets to grid_layout
         :return:
@@ -47,18 +51,55 @@ class MainWindow(QMainWindow):
 
         self.server_id_input = QLineEdit()
         self.server_id_input.setPlaceholderText("Server ID")
-        self.setAccessibleName(server_id_input_style[0])
-        self.setStyleSheet(server_id_input_style[1])
+        self.server_id_input.setAccessibleName(server_id_input_style[0])
+        self.server_id_input.setStyleSheet(server_id_input_style[1])
 
         self.port_input = QLineEdit()
         self.port_input.setPlaceholderText("Port")
-        self.setAccessibleName(port_input_style[0])
-        self.setStyleSheet(port_input_style[1])
+        self.port_input.setAccessibleName(port_input_style[0])
+        self.port_input.setStyleSheet(port_input_style[1])
+
+        self.label = QLabel("Status")
+        self.label.setAccessibleName(label_styles[0])
+        self.label.setStyleSheet(label_styles[1])
+
+        self.btn_connect = QPushButton()
+        self.btn_connect.setText("Connect")
+        self.btn_connect.setAccessibleName(btn_connect_styles[0])
+        self.btn_connect.setStyleSheet(btn_connect_styles[1])
+
+        def on_clicked_connect():
+            self.table_widget.setItem(0, 0, QTableWidgetItem(self.server_id_input.text()))
+            self.table_widget.setItem(0, 1, QTableWidgetItem("Name"))
+            self.table_widget.setItem(0, 2, QTableWidgetItem(self.port_input.text()))
+            self.table_widget.setItem(0, 3, QTableWidgetItem("System"))
+
+            # self.label.setText(MessageBox.message)
+
+        self.btn_connect.clicked.connect(on_clicked_connect)
 
         v_layout.addWidget(self.server_id_input)
         v_layout.addWidget(self.port_input)
+        v_layout.addWidget(self.label)
+        v_layout.addWidget(self.btn_connect)
 
-        self.grid_layout.addLayout(v_layout, 0, 0)
+        self.main_widget_layout.addLayout(v_layout, 0, 0)
+
+    def __add_table__(self):
+        """
+        this function add layout with table widgets to grid_layout
+        :return:
+        """
+        v_layout = QVBoxLayout()
+        v_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.table_widget = QTableWidget()
+        self.table_widget.setRowCount(1)
+        self.table_widget.setColumnCount(4)
+        self.table_widget.setHorizontalHeaderLabels(["IP Client", "Name", "Port", "System"])
+
+        v_layout.addWidget(self.table_widget)
+        self.main_widget_layout.addLayout(v_layout, 0, 1)
 
     def execute_app(self):
         self.show()
