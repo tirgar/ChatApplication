@@ -9,13 +9,15 @@ from PyQt5.QtWidgets import (
     QLineEdit, QTableWidgetItem
 )
 
-from src.gui.styles.windows.main_window_style import *
-from src.gui.components.message_box import MessageBox
+from gui.styles.windows.main_window_style import *
+from gui.components.message_box import MessageBox
 
 
 class MainWindow(QMainWindow):
-    def __init__(self , parent=None):
+    def __init__(self , parent=None, socket_server=None):
         super(MainWindow, self).__init__(parent=parent)
+
+        self.socket_server = socket_server
 
         self.setWindowTitle("main window")
         self.setContentsMargins(0, 0, 0, 0)
@@ -49,10 +51,10 @@ class MainWindow(QMainWindow):
         v_layout.setContentsMargins(0, 0, 0, 0)
         v_layout.addStretch(0)
 
-        self.server_id_input = QLineEdit()
-        self.server_id_input.setPlaceholderText("Server ID")
-        self.server_id_input.setAccessibleName(server_id_input_style[0])
-        self.server_id_input.setStyleSheet(server_id_input_style[1])
+        self.server_ip_input = QLineEdit()
+        self.server_ip_input.setPlaceholderText("Server IP")
+        self.server_ip_input.setAccessibleName(server_id_input_style[0])
+        self.server_ip_input.setStyleSheet(server_id_input_style[1])
 
         self.port_input = QLineEdit()
         self.port_input.setPlaceholderText("Port")
@@ -69,16 +71,25 @@ class MainWindow(QMainWindow):
         self.btn_connect.setStyleSheet(btn_connect_styles[1])
 
         def on_clicked_connect():
-            self.table_widget.setItem(0, 0, QTableWidgetItem(self.server_id_input.text()))
-            self.table_widget.setItem(0, 1, QTableWidgetItem("Name"))
-            self.table_widget.setItem(0, 2, QTableWidgetItem(self.port_input.text()))
-            self.table_widget.setItem(0, 3, QTableWidgetItem("System"))
+            # self.table_widget.setItem(0, 0, QTableWidgetItem(self.server_id_input.text()))
+            # self.table_widget.setItem(0, 1, QTableWidgetItem("Name"))
+            # self.table_widget.setItem(0, 2, QTableWidgetItem(self.port_input.text()))
+            # self.table_widget.setItem(0, 3, QTableWidgetItem("System"))
+            result = self.socket_server.try_binding(
+                server_ip=self.server_ip_input.text(),
+                server_port=int(self.port_input.text())
+            )  # return => (bool, status)
 
-            # self.label.setText(MessageBox.message)
+            self.label.setText(str(result[1]))
+            
+            if result[0] == True:
+                print("Connect Success for runing")
+                # TODO: make new thread for socket service on background
+                # self.socket_server.run(start=True)
 
         self.btn_connect.clicked.connect(on_clicked_connect)
 
-        v_layout.addWidget(self.server_id_input)
+        v_layout.addWidget(self.server_ip_input)
         v_layout.addWidget(self.port_input)
         v_layout.addWidget(self.label)
         v_layout.addWidget(self.btn_connect)

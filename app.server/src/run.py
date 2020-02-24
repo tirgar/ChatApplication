@@ -1,4 +1,4 @@
-from src.core.startup import StartUp
+from core.startup import StartUp
 
 
 def main():
