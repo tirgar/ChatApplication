@@ -89,8 +89,8 @@ class MainWindow(QMainWindow):
         self.btn_connect.clicked.connect(on_clicked_connect)
 
         self.q_text_edit = QTextEdit()
-        self.q_text_edit.setText("Loges :: ")
         self.q_text_edit.setAccessibleName(q_text_edit_styles[0])
+        self.q_text_edit.setReadOnly(True)
         self.q_text_edit.setStyleSheet(q_text_edit_styles[1])
         
         v_layout.addWidget(self.server_ip_input)

@@ -47,7 +47,7 @@ server_status_label_styles = ("server_status_label_styles", """
         min-height: 50px;
         margin-right: 70px;
         margin-left: 40px;
-        margin-bottom: 300px;
+        margin-bottom: 200px;
     }
 """)
 
@@ -68,13 +68,7 @@ btn_connect_styles = ("btn_connect_styles", """
 q_text_edit_styles = ("q_text_edit_styles", """
     [accessibleName="q_text_edit_styles"] {
         color: balck;
-        max-width: 170px;
-        height: 100px;
-        min-width: 200px;
-        border: 3px solid green;
-        border-radius: 40px;
-        margin-left: 50px;
+        min-height: 270px;
         font-size: 15px;
-        margin-bottom: 50px;
     }
 """)
