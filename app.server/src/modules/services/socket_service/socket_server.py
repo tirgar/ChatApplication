@@ -7,11 +7,13 @@ from socket import (
 from utils.config_manager import ConfigManager
 from .client_handler import ClientHandler
 
+from PyQt5.QtCore import QThread
 
-class SocketServer:
+
+class SocketServer(QThread):
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super(SocketServer, self).__init__(parent=parent)
 
         self.socket_server = socket(AF_INET, SOCK_STREAM)
         self.socket_server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -31,12 +33,13 @@ class SocketServer:
             # TODO: set this action to log service
             return (False, "An error happend")
     
-    def run(self, start: bool):
+    def run(self):
         """ run server for accepting new client
             :params start: start or stoping the server
             :return:
         """
-        while start:
+
+        while True:
             client, client_address = self.socket_server.accept()
             ClientHandler(client=client, client_address=client_address).start()
         

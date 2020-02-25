@@ -83,6 +83,7 @@ class MainWindow(QMainWindow):
 
             if result[0] == True:
                 # run server in background thread
+                self.socket_server.start() # when we use start method acctully we call run
                 print("Connect Success for running")
 
         self.btn_connect.clicked.connect(on_clicked_connect)
