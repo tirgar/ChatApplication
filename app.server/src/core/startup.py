@@ -7,7 +7,7 @@ from sys import (
     exit as sys_exit, argv as sys_argv
 )
 from PyQt5.QtWidgets import QApplication
-from gui.windows.mainwindow import MainWindow
+from gui.windows.window_handlers.mainwindow import MainWindow
 
 
 class StartUp:

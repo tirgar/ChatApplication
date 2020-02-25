@@ -6,7 +6,7 @@
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QWidget, QGridLayout,
     QTableWidget, QApplication, QVBoxLayout, QLabel,
-    QLineEdit, QTableWidgetItem
+    QLineEdit, QTableWidgetItem, QHeaderView
 )
 
 from gui.styles.windows.main_window_style import *
@@ -53,17 +53,20 @@ class MainWindow(QMainWindow):
 
         self.server_ip_input = QLineEdit()
         self.server_ip_input.setPlaceholderText("Server IP")
-        self.server_ip_input.setAccessibleName(server_id_input_style[0])
-        self.server_ip_input.setStyleSheet(server_id_input_style[1])
+        self.server_ip_input.setText("127.0.0.1")
+        self.server_ip_input.setAccessibleName(server_ip_input_style[0])
+        self.server_ip_input.setStyleSheet(server_ip_input_style[1])
 
         self.port_input = QLineEdit()
         self.port_input.setPlaceholderText("Port")
+        self.port_input.setText("9500")
         self.port_input.setAccessibleName(port_input_style[0])
         self.port_input.setStyleSheet(port_input_style[1])
 
-        self.label = QLabel("Status")
-        self.label.setAccessibleName(label_styles[0])
-        self.label.setStyleSheet(label_styles[1])
+        self.server_status_label = QLabel()
+        self.server_status_label.setText("Server status => not listening")
+        self.server_status_label.setAccessibleName(server_status_label_styles[0])
+        self.server_status_label.setStyleSheet(server_status_label_styles[1])
 
         self.btn_connect = QPushButton()
         self.btn_connect.setText("Connect")
@@ -71,28 +74,23 @@ class MainWindow(QMainWindow):
         self.btn_connect.setStyleSheet(btn_connect_styles[1])
 
         def on_clicked_connect():
-            # self.table_widget.setItem(0, 0, QTableWidgetItem(self.server_id_input.text()))
-            # self.table_widget.setItem(0, 1, QTableWidgetItem("Name"))
-            # self.table_widget.setItem(0, 2, QTableWidgetItem(self.port_input.text()))
-            # self.table_widget.setItem(0, 3, QTableWidgetItem("System"))
+            
             result = self.socket_server.try_binding(
                 server_ip=self.server_ip_input.text(),
                 server_port=int(self.port_input.text())
             )  # return => (bool, status)
+            self.server_status_label.setText("Server status => \n" + str(result[1]))
 
-            self.label.setText(str(result[1]))
-            
             if result[0] == True:
-                print("Connect Success for runing")
-                # TODO: make new thread for socket service on background
-                # self.socket_server.run(start=True)
+                # run server in background thread
+                print("Connect Success for running")
 
         self.btn_connect.clicked.connect(on_clicked_connect)
-
+        
         v_layout.addWidget(self.server_ip_input)
         v_layout.addWidget(self.port_input)
-        v_layout.addWidget(self.label)
         v_layout.addWidget(self.btn_connect)
+        v_layout.addWidget(self.server_status_label)
 
         self.main_widget_layout.addLayout(v_layout, 0, 0)
 
@@ -105,9 +103,15 @@ class MainWindow(QMainWindow):
         v_layout.setContentsMargins(0, 0, 0, 0)
 
         self.table_widget = QTableWidget()
-        self.table_widget.setRowCount(1)
+        self.table_widget.setRowCount(0)
         self.table_widget.setColumnCount(4)
         self.table_widget.setHorizontalHeaderLabels(["IP Client", "Name", "Port", "System"])
+        
+        header = self.table_widget.horizontalHeader()       
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.Stretch)
 
         v_layout.addWidget(self.table_widget)
         self.main_widget_layout.addLayout(v_layout, 0, 1)
