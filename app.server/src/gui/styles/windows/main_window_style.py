@@ -61,6 +61,20 @@ btn_connect_styles = ("btn_connect_styles", """
         border-radius: 40px;
         margin-left: 130px;
         font-size: 15px;
-        margin-bottom: 100px;
+        margin-bottom: 20px;
+    }
+""")
+
+q_text_edit_styles = ("q_text_edit_styles", """
+    [accessibleName="q_text_edit_styles"] {
+        color: balck;
+        max-width: 170px;
+        height: 100px;
+        min-width: 200px;
+        border: 3px solid green;
+        border-radius: 40px;
+        margin-left: 50px;
+        font-size: 15px;
+        margin-bottom: 50px;
     }
 """)
