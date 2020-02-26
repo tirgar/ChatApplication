@@ -9,14 +9,17 @@ from socket import (
 )
 
 from utils.config_manager import ConfigManager
+from .command_handler import CommandHandler
 
 
-class ClientSocketService:
+class SocketService:
     def __init__(self):
         self.config_manager = ConfigManager()
 
         self.sock = socket(AF_INET, SOCK_STREAM)
-        self.sock.setsockopt(SOL_SOCKET, SO_REUSEADDR)
+        self.sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+
+        self.__connect__()
 
     def __connect__(self):
         """ this function try connecting to server
@@ -26,11 +29,12 @@ class ClientSocketService:
         print("[+] Try connecting to server ..")
 
         response_code = self.sock.connect_ex((
-            self.config_manager.get.sockert_server.IP,
+            self.config_manager.get.socket_server.IP,
             self.config_manager.get.socket_server.PORT,
         ))
 
         if response_code == 0:
+            print("[+] Client connect to server successfull")
             CommandHandler(client_socket=self.sock).start()
 
         elif response_code == 111:
