@@ -20,7 +20,8 @@ from datetime import datetime
 class MainWindow(Observer, QMainWindow):
     def __init__(self, parent=None, socket_server=None):
         super(MainWindow, self).__init__(parent=parent)
-        ConcentrateSubject().attach(self)
+        self.concentrate_subject = ConcentrateSubject()
+        self.concentrate_subject.attach(self)
 
         self.socket_server = socket_server
 
@@ -93,6 +94,12 @@ class MainWindow(Observer, QMainWindow):
             if result[0] is True:
                 # run server in background thread
                 self.socket_server.start()  # when we use start method actually we call run
+                
+                def send_data_concentrate(data):
+                    self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
+                    
+                self.socket_server.signal.connect(send_data_concentrate)
+                
                 print("Connect Success for running")
 
         self.btn_connect.clicked.connect(on_clicked_connect)
@@ -136,8 +143,16 @@ class MainWindow(Observer, QMainWindow):
         """ Receive update from subject
             :params message: incoming message
         """
+        from json import loads as json_loads
+        
+        incoming_message = json_loads(message)
+        
         last_text = self.q_text_edit.toPlainText()
-        self.q_text_edit.setText(str(datetime.now()).split(".")[0] + message + "\n")
+        self.q_text_edit.setText(
+            last_text + "\n" + str(datetime.now()).split(".")[0] 
+            + " " + str(incoming_message["client_address"])
+            + ": " + incoming_message["message"]
+        )
 
     def execute_app(self):
         self.show()
