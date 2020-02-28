@@ -28,10 +28,10 @@ class ClientHandler(Thread):
             # send welcome message to server
             self.client.sendall(str(
                 json_dumps({
-                    "message": "Welcome to WhatsUp server",
+                    "message": "Welcome to server",
                     "command": "START",
                     "from": "server",
-                    "group": "brodcast"
+                    "group": "broadcast"
                 })
             ).encode("utf-8"))
 
@@ -42,7 +42,7 @@ class ClientHandler(Thread):
                     "message": "",
                     "command": "AUTH",
                     "from": "server",
-                    "group": "brodcast"
+                    "group": "broadcast"
                 })
             ).encode("utf-8"))
             self.first_message = True

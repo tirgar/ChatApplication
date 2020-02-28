@@ -34,8 +34,8 @@ class SocketService:
         ))
 
         if response_code == 0:
-            print("[+] Client connect to server successfull")
+            print("[+] Client connect to server successfully")
             CommandHandler(client_socket=self.sock).start()
 
         elif response_code == 111:
-            print("[-] [WhatsUp] server no responed maybe it is down ...")
+            print("[-] server no response maybe it is down ...")

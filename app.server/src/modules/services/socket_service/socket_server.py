@@ -28,10 +28,10 @@ class SocketServer(QThread):
             # start listening to client from this IP and PORT
             self.socket_server.bind((server_ip, server_port))
             self.socket_server.listen(self.config_manager.get.SOCKET_SERVER.CLIENT_COUNT)
-            return (True, "[+] binding was success")
+            return True, "[+] binding was success"
         except Exception as error:
             # TODO: set this action to log service
-            return (False, "An error happend")
+            return False, "An error happened"
     
     def run(self):
         """ run server for accepting new client

@@ -3,7 +3,7 @@
     - this package is entry point of application
 """
 
-from core.start_up import StartUp
+from core.startup import StartUp
 
 
 def main():

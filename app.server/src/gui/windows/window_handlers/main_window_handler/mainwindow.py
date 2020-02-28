@@ -18,7 +18,7 @@ from datetime import datetime
 
 
 class MainWindow(Observer, QMainWindow):
-    def __init__(self , parent=None, socket_server=None):
+    def __init__(self, parent=None, socket_server=None):
         super(MainWindow, self).__init__(parent=parent)
         ConcentrateSubject().attach(self)
 
@@ -90,9 +90,9 @@ class MainWindow(Observer, QMainWindow):
             )  # return => (bool, status)
             self.server_status_label.setText("Server status => \n" + str(result[1]))
 
-            if result[0] == True:
+            if result[0] is True:
                 # run server in background thread
-                self.socket_server.start() # when we use start method acctully we call run
+                self.socket_server.start()  # when we use start method actually we call run
                 print("Connect Success for running")
 
         self.btn_connect.clicked.connect(on_clicked_connect)
