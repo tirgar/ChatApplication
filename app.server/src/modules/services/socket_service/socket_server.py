@@ -3,14 +3,18 @@ from socket import (
     socket, AF_INET, SOCK_STREAM,
     SOL_SOCKET, SO_REUSEADDR
 )
+from concurrent.futures import ThreadPoolExecutor
+from json import (dumps as json_dumps)
 
 from utils.config_manager import ConfigManager
 from .client_handler import ClientHandler
 
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, pyqtSignal
 
 
 class SocketServer(QThread):
+    
+    _signal = pyqtSignal(object)
     
     def __init__(self, parent=None):
         super(SocketServer, self).__init__(parent=parent)
@@ -38,8 +42,35 @@ class SocketServer(QThread):
             :params start: start or stoping the server
             :return:
         """
+        with ThreadPoolExecutor(500) as thr_pool:
+            while True:
+                client_socket, client_address = self.socket_server.accept()
+                thr_pool.submit(self.serve_connections, client_socket, client_address)
 
+    def serve_connections(self, client_socket, client_address):
         while True:
-            client, client_address = self.socket_server.accept()
-            ClientHandler(client=client, client_address=client_address).start()
+            client_socket.sendall(str(
+                json_dumps({
+                    "message": "Welcome to server",
+                    "command": "START",
+                    "from": "server",
+                    "group": "broadcast"
+                })
+            ).encode("utf-8"))
+            
+            data_transfer = (
+                json_dumps({
+                    "client_address": client_address,
+                    "message": "Connect to server"
+                })
+            )
+            
+            self._signal.emit(data_transfer)
+
+            incoming_data = client_socket.recv(8096).decode("utf-8")
         
+        threading.current_thread().join()
+    
+    @property
+    def signal(self):
+        return self._signal
