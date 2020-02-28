@@ -13,25 +13,16 @@ from datetime import datetime
 
 class CommandHandler:
     def __init__(self, client_socket: socket):
-        self.client_socket = client_socket
+        self.client_socket: socket = client_socket
+        self.start_tx_rc: bool = True
 
     def start(self):
         """ start command handler service
             :params:
             :return:
-        """
-
-        name = input("Enter your name ")
-        systen = input("Enter your system platform")
-
-        self.client_socket.sendall(
-            json_dumps({
-                "message": {
-                    "name": name,
-                    "system": systen
-                }
-            })
-        ).encode("utf-8")
-
-        self.start()
-
+        """        
+        
+        while self.start_tx_rc:
+            welcome_message = self.client_socket.recv(8096)
+            message_loads = json_loads(welcome_message.decode("utf-8"))
+            print(message_loads)

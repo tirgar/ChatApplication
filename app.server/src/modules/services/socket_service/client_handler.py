@@ -5,6 +5,8 @@ from typing import Any
 from time import sleep
 from json import (dumps as json_dumps)
 
+from core.inner_concentrate.concentrate import ConcentrateSubject
+
 
 class ClientHandler(Thread):
     
@@ -13,6 +15,7 @@ class ClientHandler(Thread):
         
         self.client = client
         self.client_address = client_address
+        self.concentrate = ConcentrateSubject()
         
         self.first_message: bool = False
         
@@ -44,4 +47,5 @@ class ClientHandler(Thread):
             ).encode("utf-8"))
             self.first_message = True
             
+            self.concentrate.notify(message="New client add to system", to="MAIN_WINDOW")
             # TODO: write recv message from client and then send it to message handler system

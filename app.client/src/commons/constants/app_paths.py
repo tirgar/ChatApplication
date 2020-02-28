@@ -3,4 +3,4 @@
     - all constant paths
 """
 
-APP_SETTING_PATH = "appsettings.json"
+APP_SETTING_PATH = "./appsettings.json"

@@ -14,9 +14,9 @@ class StartUp:
             :params:
             :return:
         """
-        from modules.services.socket_services.socket_service import ClientSocketService
+        from modules.services.socket_services.socket_service import SocketService
 
-        ClientSocketService()
+        SocketService()
 
     def start(self):
         """ this function start app from this lines

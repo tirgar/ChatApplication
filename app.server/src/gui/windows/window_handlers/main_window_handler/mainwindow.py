@@ -11,11 +11,16 @@ from PyQt5.QtWidgets import (
 
 from gui.styles.windows.main_window_style import *
 from gui.components.message_box import MessageBox
+from interfaces.observer_pattern.observer import Observer
+from core.inner_concentrate.concentrate import ConcentrateSubject
+
+from datetime import datetime
 
 
-class MainWindow(QMainWindow):
+class MainWindow(Observer, QMainWindow):
     def __init__(self , parent=None, socket_server=None):
         super(MainWindow, self).__init__(parent=parent)
+        ConcentrateSubject().attach(self)
 
         self.socket_server = socket_server
 
@@ -26,6 +31,10 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(main_window_styles[1])
 
         self.__set_main_widget__()
+        
+    @property
+    def class_name(self):
+        return "MAIN_WINDOW"
 
     def __set_main_widget__(self):
         """ Add centeral widget for switching between widgets in main window
@@ -122,6 +131,13 @@ class MainWindow(QMainWindow):
 
         v_layout.addWidget(self.table_widget)
         self.main_widget_layout.addLayout(v_layout, 0, 1)
+
+    def notification(self, message):
+        """ Receive update from subject
+            :params message: incoming message
+        """
+        last_text = self.q_text_edit.toPlainText()
+        self.q_text_edit.setText(str(datetime.now()).split(".")[0] + message + "\n")
 
     def execute_app(self):
         self.show()
