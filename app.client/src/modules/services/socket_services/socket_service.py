@@ -10,6 +10,7 @@ from socket import (
 
 from utils.config_manager import ConfigManager
 from .command_handler import CommandHandler
+from gui.components.message_box import MessageBox
 
 
 class SocketService:
@@ -38,4 +39,8 @@ class SocketService:
             CommandHandler(client_socket=self.sock).start()
 
         elif response_code == 111:
-            print("[-] server no response maybe it is down ...")
+            MessageBox(
+                title="Error",
+                message="[-] server no response maybe it is down ..."
+            ).show()
+            # `print("[-] server no response maybe it is down ...")
