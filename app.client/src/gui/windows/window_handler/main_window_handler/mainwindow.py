@@ -17,7 +17,7 @@ from gui.components.message_box import MessageBox
 
 class MainWindow(Observer, QMainWindow):
     def __init__(self, parent=None, socket_server=None):
-        super(MainWindow, self).__init__(parent=parent, )
+        super(MainWindow, self).__init__(parent=parent)
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
 
@@ -30,32 +30,22 @@ class MainWindow(Observer, QMainWindow):
         self.setStyleSheet(main_window_styles[1])
 
         self.__set_main_widget__()
-        self.__signal__()
+        self.__signal_to_socket__()
 
     @property
     def class_name(self):
         return "MAIN_WINDOW"
 
-    def __signal__(self):
-        response = self.socket_server.__try_connect__()
-        if response is True:
-            def send_data_concentrate(data):
-                self.socket_server.start()
-                self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
-
-            self.socket_server.signal.connect(send_data_concentrate)
-
-        else:
-            def send_data_concentrate(data):
-                self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
-
-            self.socket_server.signal.connect(send_data_concentrate)
+    def __signal_to_socket__(self):
+        self.socket_server.start()
+        def send_data_concentrate(data):
+            self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
+        self.socket_server.signal.connect(send_data_concentrate)
 
     def notification(self, message):
         """ Receive update from subject
             :params message: incoming message
         """
-
         MessageBox(
             title="Error",
             message=str(message)
