@@ -34,5 +34,3 @@ class StartUp:
         main_window.execute_app()
 
         sys_exit(self.app.exec_())
-
-        # self.__start_socket_service__()

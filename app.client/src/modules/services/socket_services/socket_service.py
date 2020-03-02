@@ -7,40 +7,47 @@
 from socket import (
     socket, AF_INET, SOL_SOCKET, SO_REUSEADDR, SOCK_STREAM
 )
+from PyQt5.QtCore import QThread, pyqtSignal
 
 from utils.config_manager import ConfigManager
 from .command_handler import CommandHandler
-from gui.components.message_box import MessageBox
 
 
-class SocketService:
-    def __init__(self):
+class SocketService(QThread):
+
+    _signal = pyqtSignal(object)
+
+    def __init__(self, parent=None):
+        super(SocketService, self).__init__(parent=parent)
         self.config_manager = ConfigManager()
 
         self.sock = socket(AF_INET, SOCK_STREAM)
         self.sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
-        self.__connect__()
-
-    def __connect__(self):
+    def __try_connect__(self):
         """ this function try connecting to server
            :param:
            :return:
         """
         print("[+] Try connecting to server ..")
+        while True:
+            response_code = self.sock.connect_ex((
+                self.config_manager.get.socket_server.IP,
+                self.config_manager.get.socket_server.PORT,
+            ))
 
-        response_code = self.sock.connect_ex((
-            self.config_manager.get.socket_server.IP,
-            self.config_manager.get.socket_server.PORT,
-        ))
+            if response_code == 0:
+                message = "[+] Client connect to server successfully"
+                # CommandHandler(client_socket=self.sock).start()
+                self._signal.emit(message)
+                return True
 
-        if response_code == 0:
-            print("[+] Client connect to server successfully")
-            CommandHandler(client_socket=self.sock).start()
+            elif response_code == 111:
+                message = "[-] server no response maybe it is down ..."
+                self._signal.emit(message)
+                return False
+            # threading.current_thread().join()
 
-        elif response_code == 111:
-            MessageBox(
-                title="Error",
-                message="[-] server no response maybe it is down ..."
-            ).show()
-            # `print("[-] server no response maybe it is down ...")
+    @property
+    def signal(self):
+        return self._signal
