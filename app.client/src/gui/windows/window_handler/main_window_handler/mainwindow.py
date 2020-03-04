@@ -5,7 +5,7 @@
 
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, 
-    QGroupBox, QGridLayout
+    QGroupBox, QGridLayout, QVBoxLayout
 )
 from PyQt5.QtCore import Qt
 
@@ -20,7 +20,7 @@ class MainWindow(Observer, QMainWindow):
         super(MainWindow, self).__init__(parent=parent)
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
-        self.setLayoutDirection(Qt.RightToLeft)
+        # self.setLayoutDirection(Qt.RightToLeft)
         self.socket_server = socket_server
 
         self.setWindowTitle("main window")
@@ -36,6 +36,7 @@ class MainWindow(Observer, QMainWindow):
 
     def __signal_to_socket__(self):
         self.socket_server.start()
+
         def send_data_concentrate(data):
             self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
         self.socket_server.signal.connect(send_data_concentrate)
@@ -53,14 +54,31 @@ class MainWindow(Observer, QMainWindow):
         """ Add centeral widget for switching between widgets in main window
             :return:
         """
+        main_widget = QWidget(self)
+        self.setCentralWidget(main_widget)
 
         self.main_widget_layout = QHBoxLayout()
         self.main_widget_layout.setStretch(0, 0)
         self.main_widget_layout.setContentsMargins(0, 0, 0, 0)
 
+        self.__create_grid_layout__()
+
+        self.main_widget_layout.addWidget(self.horizontalGroupBox)
+        main_widget.setLayout(self.main_widget_layout)
+
+    def __create_grid_layout__(self):
+        self.horizontalGroupBox = QGroupBox()
+        layout = QGridLayout()
+
         from ...pages.main_window_widgets.users_list_widgets import UserListWidget
+        from ...pages.main_window_widgets.chat_main_widget import ChatMainWidget
         user_widget_main = UserListWidget(parent=self)
-        self.main_widget_layout.addWidget(user_widget_main)
+        chat_main_widget = ChatMainWidget(parent=self)
+
+        layout.addWidget(user_widget_main, 0, 0)
+        layout.addWidget(chat_main_widget, 0, 1)
+
+        self.horizontalGroupBox.setLayout(layout)
 
     def execute_app(self):
         self.show()
