@@ -2,6 +2,7 @@ chat_title_widget_styles = ("chat_title_widget_styles", """
     [accessibleName="chat_title_widget_styles"] {
         max-height: 100px;
         min-height: 100px;
+        background-color: red;
     }
 """)
 
@@ -30,3 +31,14 @@ user_label_styles = ("user_label_styles", """
         margin-top: 10px;      
     }
 """)
+
+main_frame_styles = ("main_frame_styles", """
+    [accessibleName="main_frame_styles"] {
+        background-color: #252331;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 3px solid #282635;
+    }
+""")
+
+# https://border-radius.com/
