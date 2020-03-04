@@ -18,7 +18,7 @@ class ChatMainWidget(QWidget):
         self.setStyleSheet(chat_main_widget_styles[1])
 
         self.chat_main_layout = QVBoxLayout()
-        self.chat_main_layout.setContentsMargins(0, 0, 0, 0)
+        self.chat_main_layout.setContentsMargins(10, 0, 20, 0)
         self.chat_main_layout.setStretch(0, 0)
 
         self.setLayout(self.chat_main_layout)
@@ -26,7 +26,4 @@ class ChatMainWidget(QWidget):
 
     def __add_btn__(self):
         title_widget = ChatTitle(parent=self)
-        # lay = QVBoxLayout()
-        # btn = QPushButton("afradf")
-        # lay.addWidget(btn)
         self.chat_main_layout.addWidget(title_widget)

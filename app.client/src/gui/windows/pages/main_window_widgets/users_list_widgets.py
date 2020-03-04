@@ -25,6 +25,7 @@ class UserListWidget(QWidget):
     
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setStretch(0, 0)
 
         self.setLayout(self.main_layout)
         
@@ -32,28 +33,32 @@ class UserListWidget(QWidget):
     
     def __add_scroll_area__(self):
         main_frame = QFrame()
+        main_frame.setContentsMargins(10, 10, 10, 10)
+        main_frame.setAccessibleName(main_scroll_holder_frame[0])
+        main_frame.setStyleSheet(main_scroll_holder_frame[1])
         form_layout = QFormLayout()
+        form_layout.setContentsMargins(0, 0, 0, 0)
 
         for i in range(50):
             sub_frame = QFrame()
             sub_frame.setContentsMargins(0, 0, 0, 0)
-            # sub_frame.setFrameShape(QFrame.StyledPanel)
+
             sub_frame.setAccessibleName(sub_qframe_styles[0])
             sub_frame.setStyleSheet(sub_qframe_styles[1])
             
             user_profile_layout = QHBoxLayout()
             user_profile_layout.setContentsMargins(0, 0, 0, 0)
-            user_profile_layout.setStretch(0, 0)
 
             username_icon = QPushButton()
+            username_icon.setContentsMargins(0, 0, 0, 0)
             username_icon.setAccessibleName(username_icon_styles[0])
             username_icon.setStyleSheet(username_icon_styles[1])
-            icon = QIcon(
-                '/home/farzad/Workspace/Python_practice/session_17/ChatApplication/app.client/src/assets/user.png'
-            )
+            icon = QIcon('./assets/user.png')
             username_icon.setIcon(icon)
-            username_icon.setIconSize(QSize(20, 20))
+            username_icon.setIconSize(QSize(40, 40))
+            
             username_label = QLabel("User" + str(i))
+            username_label.setContentsMargins(0, 0, 0, 0)
             username_label.setAccessibleName(username_label_styles[0])
             username_label.setStyleSheet(username_label_styles[1])
             
@@ -70,6 +75,7 @@ class UserListWidget(QWidget):
         scroll.setAccessibleName(scroll_layout_styles[0])
         scroll.setStyleSheet(scroll_layout_styles[1])
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll.setWidget(main_frame)
         scroll.setWidgetResizable(True)
         

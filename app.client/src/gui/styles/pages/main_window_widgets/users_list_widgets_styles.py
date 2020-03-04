@@ -1,51 +1,49 @@
 
 main_widget_styles = ("main_widget_styles", """
-    [accessibleName="main_widget_styles"] {
-        min-width: 170px;
-        max-width: 170px;
-        max-height: 600px;
-        min-height: 600px;
-    }
+    [accessibleName="main_widget_styles"] { }
+""")
+
+main_scroll_holder_frame = ("main_scroll_holder_frame", """
+    [accessibleName="main_scroll_holder_frame"] {
+        background-color: #211f2c;
+        border: none;
+    }                            
 """)
 
 scroll_layout_styles = ("scroll_layout_styles", """
     [accessibleName="scroll_layout_styles"] {
-        min-width: 170px
-        max-width: 170px;
-        max-height: 600px;
-        min-height: 600px;
+        min-width: 220px;
+        max-width: 220px;
+        border: none;
+        max-height: 595px;
+        min-height: 595px;
     }
 """)
 
 username_icon_styles = ("username_icon_styles", """
     [accessibleName="username_icon_styles"] {
-        max-width: 20px;
-        max-height: 20px;
+        min-width: 60px;
+        max-width: 60px;
+        min-height: 60px;
+        max-height: 60px;
         border: none; 
-        margin-bottom: 5px;      
-        margin-top: 5px;      
     }
 """)
 
 username_label_styles = ("username_label_styles", """
     [accessibleName="username_label_styles"] {
-        background-color: #7FB3D5;
-        padding-right: 10px;
-        max-height: 20px;
-        border: 3px solid #34495E; 
-        margin-left: 5px;
-        margin-bottom: 5px;      
-        margin-top: 5px;      
+        font-size: 16px;
+        max-height: 30px;
+        max-width: 100px;
+        color: #ffffff;
     }
 """)
 
 sub_qframe_styles = ("sub_qframe_styles", """
     [accessibleName="sub_qframe_styles"] {
-        padding: 2px;
-        padding-right: 5px;
-        border: 3px solid black;
-        border-radius: 5px; 
-        margin-bottom: 5px;      
-        margin-top: 5px;      
+        min-height: 60px;
+        max-height: 60px;
+        background-color: #252331;
+        border-radius: 10px;
     }
 """)
