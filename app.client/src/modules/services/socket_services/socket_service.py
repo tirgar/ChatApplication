@@ -37,15 +37,16 @@ class SocketService(QThread):
             self.config_manager.get.socket_server.PORT,
         ))
         if response_code == 0:
-            message = "[+] Client connect to server successfully"
-            self._signal.emit(message)
+            print("[+] Client connect to server successfully")
+            # self._signal.emit(message)
         else:
             message = "[-] Server no response maybe it is down ..."
             self._signal.emit(message)
 
     def run(self):
         self.__try_connecting_to_server__()
-        
+        CommandHandler(client_socket=self.sock).start()        
+
     @property
     def signal(self):
         return self._signal

@@ -8,21 +8,28 @@ from json import (
     loads as json_loads,
     dumps as json_dumps
 )
-from datetime import datetime
+from platform import uname
 
 
 class CommandHandler:
     def __init__(self, client_socket: socket):
-        self.client_socket: socket = client_socket
-        self.start_tx_rc: bool = True
-
-    def start(self):
-        """ start command handler service
-            :params:
-            :return:
-        """        
+        self.client_socket = client_socket
         
-        while self.start_tx_rc:
-            welcome_message = self.client_socket.recv(8096)
-            message_loads = json_loads(welcome_message.decode("utf-8"))
-            print(message_loads)
+    def __send_hi_message__(self) -> str:        
+        return json_dumps({
+            "message": "",
+            "params": "",
+            "command": "[FIRST]",
+            "session": "",
+            "route": {
+                "group": "",
+                "to": "server"
+            },
+            "option": {
+                "sys_info": str(uname().system)
+            }
+        })
+        
+    def start(self):
+        self.client_socket.sendall(self.__send_hi_message__().encode("utf-8"))
+        

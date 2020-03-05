@@ -3,49 +3,41 @@ from threading import Thread
 from socket import socket
 from typing import Any
 from time import sleep
-from json import (dumps as json_dumps)
+from json import (dumps as json_dumps, loads as json_loads)
 
 from core.inner_concentrate.concentrate import ConcentrateSubject
 
 
-class ClientHandler(Thread):
+class ClientHandler:
     
-    def __init__(self, client: socket, client_address: Any):
-        Thread.__init__(self)
-        
-        self.client = client
+    def __init__(self, client: socket, client_address: Any, signal: Any): 
+        self.client_socket = client
         self.client_address = client_address
-        self.concentrate = ConcentrateSubject()
-        
-        self.first_message: bool = False
-        
-    def run(self):
-        """ run new client thread from this function 
-            :params:
-            :return:
-        """
-        if self.first_message is False:
-            # send welcome message to server
-            self.client.sendall(str(
-                json_dumps({
-                    "message": "Welcome to server",
-                    "command": "START",
-                    "from": "server",
-                    "group": "broadcast"
-                })
-            ).encode("utf-8"))
+        self._signal = signal
 
-            sleep(.1)
-
-            self.client.sendall(str(
-                json_dumps({
-                    "message": "",
-                    "command": "AUTH",
-                    "from": "server",
-                    "group": "broadcast"
-                })
-            ).encode("utf-8"))
-            self.first_message = True
-            
-            self.concentrate.notify(message="New client add to system", to="MAIN_WINDOW")
-            # TODO: write recv message from client and then send it to message handler system
+    def cataliz_data(self, message):
+        json_message = json_loads(message)
+        
+        if (
+            json_message["command"] == "[FIRST]" and 
+            json_message["route"]["to"] == "server"
+        ):
+            try:
+                print(json_message)
+                new_message = {
+                    "system": json_message["option"]["sys_info"],
+                    "ip": self.client_address[0],
+                    "port": self.client_address[1],
+                    "name": "new client"
+                }
+                self._signal.emit(json_dumps({
+                    "message": new_message,
+                    "to": "table_widget"
+                }))
+            except Exception as error:
+                print(error)
+    
+    def start(self):
+        while True:
+            incoming_data = self.client_socket.recv(8096).decode("utf-8")
+            self.cataliz_data(incoming_data)
