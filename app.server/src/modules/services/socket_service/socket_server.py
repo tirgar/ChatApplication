@@ -45,31 +45,24 @@ class SocketServer(QThread):
         with ThreadPoolExecutor(500) as thr_pool:
             while True:
                 client_socket, client_address = self.socket_server.accept()
+
+                data_transfer = (
+                    json_dumps({
+                        "client_address": client_address,
+                        "message": "Connect to server",
+                        "to": "editlog"
+                    })
+                )
+                self._signal.emit(data_transfer)
+
                 thr_pool.submit(self.serve_connections, client_socket, client_address)
 
     def serve_connections(self, client_socket, client_address):
-        while True:
-            client_socket.sendall(str(
-                json_dumps({
-                    "message": "Welcome to server",
-                    "command": "START",
-                    "from": "server",
-                    "group": "broadcast"
-                })
-            ).encode("utf-8"))
-            
-            data_transfer = (
-                json_dumps({
-                    "client_address": client_address,
-                    "message": "Connect to server"
-                })
-            )
-            
-            self._signal.emit(data_transfer)
-
-            incoming_data = client_socket.recv(8096).decode("utf-8")
-        
-        threading.current_thread().join()
+        ClientHandler(
+            client=client_socket, client_address=client_address, 
+            signal=self._signal
+        ).start()  # on blocking code
+        # threading.current_thread().join()
     
     @property
     def signal(self):

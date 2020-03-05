@@ -94,10 +94,10 @@ class MainWindow(Observer, QMainWindow):
             if result[0] is True:
                 # run server in background thread
                 self.socket_server.start()  # when we use start method actually we call run
-                
+
                 def send_data_concentrate(data):
                     self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
-                    
+
                 self.socket_server.signal.connect(send_data_concentrate)
                 
                 print("Connect Success for running")
@@ -147,12 +147,16 @@ class MainWindow(Observer, QMainWindow):
         
         incoming_message = json_loads(message)
         
-        last_text = self.q_text_edit.toPlainText()
-        self.q_text_edit.setText(
-            last_text + "\n" + str(datetime.now()).split(".")[0] 
-            + " " + str(incoming_message["client_address"])
-            + ": " + incoming_message["message"]
-        )
+        if incoming_message["to"] == "editlog":
+            
+            last_text = self.q_text_edit.toPlainText()
+            self.q_text_edit.setText(
+                last_text + "\n" + str(datetime.now()).split(".")[0] 
+                + " " + str(incoming_message["client_address"])
+                + ": " + incoming_message["message"]
+            )
+        elif incoming_message["to"] == "table_widget":
+            print(message)
 
     def execute_app(self):
         self.show()
