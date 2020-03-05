@@ -15,8 +15,8 @@ scroll_layout_styles = ("scroll_layout_styles", """
         min-width: 220px;
         max-width: 220px;
         border: none;
-        max-height: 595px;
-        min-height: 595px;
+        max-height: 650px;
+        min-height: 650px;
     }
 """)
 

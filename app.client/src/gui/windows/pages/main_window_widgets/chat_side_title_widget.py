@@ -43,13 +43,30 @@ class ChatTitle(QWidget):
         icon = QIcon('./assets/user.png')
         user_icon.setIcon(icon)
         user_icon.setIconSize(QSize(60, 60))
-        user_label = QLabel('username')
+
+        user_label = QLabel('Username')
         user_label.setFrameShape(QFrame.NoFrame)
         user_label.setAccessibleName(user_label_styles[0])
         user_label.setStyleSheet(user_label_styles[1])
+
+        call_icon = QPushButton()
+        call_icon.setAccessibleName(call_icon_styles[0])
+        call_icon.setStyleSheet(call_icon_styles[1])
+        icon_call = QIcon('./assets/Phone-icon.png')
+        call_icon.setIcon(icon_call)
+        call_icon.setIconSize(QSize(25, 25))
+
+        video_icon = QPushButton()
+        video_icon.setAccessibleName(video_icon_styles[0])
+        video_icon.setStyleSheet(video_icon_styles[1])
+        icon_video = QIcon('./assets/communications.png')
+        video_icon.setIcon(icon_video)
+        video_icon.setIconSize(QSize(25, 25))
         
         frame_layout.addWidget(user_icon)
         frame_layout.addWidget(user_label)        
+        frame_layout.addWidget(call_icon)
+        frame_layout.addWidget(video_icon)
 
         main_frame.setLayout(frame_layout)
         

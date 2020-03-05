@@ -19,14 +19,16 @@ user_icon_styles = ("user_icon_styles", """
 
 user_label_styles = ("user_label_styles", """
     [accessibleName="user_label_styles"] {
-        background-color: #7FB3D5;
-        max-width: 300px;
-        min-width: 300px;
+        color: #ffffff;
+        background-color: #252331;
+        font-size: 23px;
+        max-width: 170px;
+        min-width: 170px;
         max-height: 40px;
-        border: 3px solid #34495E; 
-        border-radius: 10px;
+        border: 1px solid transparent; 
         margin-left: 15px;
-        margin-right: 2500px;
+        margin-right: 300px;
+        
         margin-bottom: 10px;      
         margin-top: 10px;      
     }
@@ -42,3 +44,24 @@ main_frame_styles = ("main_frame_styles", """
 """)
 
 # https://border-radius.com/
+call_icon_styles = ("call_icon_styles", """
+    [accessibleName="call_icon_styles"] {
+        max-width: 35px;
+        max-height: 35px;
+        border: none; 
+        margin-right: 30px;
+        margin-bottom: 10px;      
+        margin-top: 10px;      
+    }
+""")
+
+video_icon_styles = ("video_icon_styles", """
+    [accessibleName="video_icon_styles"] {
+        max-width: 35px;
+        max-height: 35px;
+        border: none;   
+        margin-right: 70px;
+        margin-bottom: 20px;      
+        margin-top: 10px;      
+    }
+""")

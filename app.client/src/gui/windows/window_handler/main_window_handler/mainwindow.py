@@ -74,6 +74,7 @@ class MainWindow(Observer, QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
+
         from ...pages.main_window_widgets.users_list_widgets import UserListWidget
         from ...pages.main_window_widgets.chat_main_widget import ChatMainWidget
         user_widget_main = UserListWidget(parent=self)
