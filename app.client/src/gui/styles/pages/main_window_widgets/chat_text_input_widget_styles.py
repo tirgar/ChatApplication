@@ -19,7 +19,8 @@ input_text_styles = ("input_text_styles", """
         background-color: #252331;
         color: #ffffff;
         border: none;
-        margin-top: 10px;
+        border-radius: 10px;
+        margin-top: 30px;
         margin-left: 10px;
         margin-bottom: 30px;
         margin-right: 10px;

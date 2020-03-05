@@ -38,6 +38,8 @@ class ChatTextInput(QWidget):
         text_input = QTextEdit()
         text_input.setPlaceholderText("Type something...")
         # text_input.setAlignment(Qt.AlignCenter)
+        text_input.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        text_input.setAlignment(Qt.AlignVCenter)
         text_input.setAccessibleName(input_text_styles[0])
         text_input.setStyleSheet(input_text_styles[1])
 
