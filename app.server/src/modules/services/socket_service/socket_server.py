@@ -50,7 +50,7 @@ class SocketServer(QThread):
                     json_dumps({
                         "client_address": client_address,
                         "message": "Connect to server",
-                        "to": "editlog"
+                        "to": "SERVER_LOGS"
                     })
                 )
                 self._signal.emit(data_transfer)

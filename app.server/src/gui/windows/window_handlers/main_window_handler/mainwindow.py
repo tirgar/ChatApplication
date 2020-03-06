@@ -147,7 +147,7 @@ class MainWindow(Observer, QMainWindow):
         
         incoming_message = json_loads(message)
         
-        if incoming_message["to"] == "editlog":
+        if incoming_message["to"] == "SERVER_LOGS":
             
             last_text = self.q_text_edit.toPlainText()
             self.q_text_edit.setText(

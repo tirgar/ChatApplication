@@ -27,13 +27,15 @@ class ClientHandler:
                 new_message = {
                     "system": json_message["option"]["sys_info"],
                     "ip": self.client_address[0],
-                    "port": self.client_address[1],
+                    "port": str(self.client_address[1]),
                     "name": "new client"
                 }
-                self._signal.emit(json_dumps({
+                data = json_dumps({
                     "message": new_message,
-                    "to": "table_widget"
-                }))
+                    "to": "TABLE_WIDGET"
+                })
+                self._signal.emit(data)
+
             except Exception as error:
                 print(error)
     

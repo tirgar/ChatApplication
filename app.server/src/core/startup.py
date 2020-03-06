@@ -8,6 +8,7 @@ from sys import (
 )
 from PyQt5.QtWidgets import QApplication
 from gui.windows.window_handlers.main_window_handler.mainwindow import MainWindow
+from gui.windows.window_handlers.main_window_handler.mainwindow_1 import MainWindow
 
 
 class StartUp:
