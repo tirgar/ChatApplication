@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, 
     QGroupBox, QGridLayout, QVBoxLayout
 )
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtCore import Qt
 
 from gui.styles.windows.main_window_style import *
@@ -86,3 +87,18 @@ class MainWindow(Observer, QMainWindow):
 
     def execute_app(self):
         self.show()
+        
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        from json import dumps as json_dumps
+        self.socket_server.get_socket.sendall(json_dumps({
+            "message": None,
+            "params": None,
+            "command": "[CLOSE]",
+            "session": None,
+            "route": {
+                "group": "",
+                "to": "server"
+            },
+            "option": None
+        }).encode("utf-8"))
+        

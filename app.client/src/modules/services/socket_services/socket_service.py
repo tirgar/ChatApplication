@@ -24,6 +24,10 @@ class SocketService(QThread):
         self.sock = socket(AF_INET, SOCK_STREAM)
         self.sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
+    @property
+    def get_socket(self):
+        return self.sock
+
     def __try_connecting_to_server__(self):
         """ this function try connecting to server
            :param:
