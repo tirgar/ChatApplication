@@ -52,9 +52,9 @@ class MainAuthWindow(Observer, QMainWindow):
         from gui.windows.pages.auth.signin import SignIn
         from gui.windows.pages.auth.signup import SignUp
 
-        signin_page = SignIn(parent=self)
+        signin_page = SignIn(parent=self, socket_server=self.socket_server)
         signin_page.set_visibility(True)
-        signup_page = SignUp(parent=self)
+        signup_page = SignUp(parent=self, socket_server=self.socket_server)
         signup_page.set_visibility(False)
 
         signin_page.set_sign_up_page(signup_page)

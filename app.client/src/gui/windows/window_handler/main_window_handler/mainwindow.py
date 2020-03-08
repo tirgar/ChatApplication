@@ -22,7 +22,6 @@ class MainWindow(Observer, QMainWindow):
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
         self.parent = parent
-        self.socket_server = SocketService()
 
         self.setWindowTitle("main window")
         self.setAccessibleName(main_window_styles[0])
@@ -36,8 +35,6 @@ class MainWindow(Observer, QMainWindow):
         return "MAIN_WINDOW"
 
     def __signal_to_socket__(self):
-        self.socket_server.start()
-
         def send_data_concentrate(data):
             self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
         self.socket_server.signal.connect(send_data_concentrate)

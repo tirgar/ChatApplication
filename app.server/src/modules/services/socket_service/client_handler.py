@@ -33,8 +33,6 @@ class ClientHandler:
                 "to": "TABLE_WIDGET",
                 "type": "[ADD]"
             })
-            self._signal.emit(data)
-
         elif (json_message["command"] == "[CLOSE]" and 
             json_message["route"]["to"] == "server"):
             data = json_dumps({
@@ -42,8 +40,18 @@ class ClientHandler:
                 "to": "TABLE_WIDGET",
                 "type": "[REMOVE]"
             })
-            self._signal.emit(data)
-    
+
+        elif (json_message["command"] == "[REGISTER]" and 
+            json_message["route"]["to"] == "server"):
+            data = json_dumps({
+                "message": json_message,
+                "to": "DATABASE_ADAPTER",
+                "client_ip_port": self.client_address,
+                "type": "[ADD_USER]"
+            })
+
+        self._signal.emit(data)
+
     def start(self):
         while True:
             incoming_data = self.client_socket.recv(8096).decode("utf-8")

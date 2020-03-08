@@ -60,21 +60,21 @@ class SignUp(Observer, QWidget):
 
     def _add_textboxs_(self):
         self.username_edit_text = QLineEdit()
-        self.username_edit_text.setPlaceholderText("Enter UserName")
+        self.username_edit_text.setPlaceholderText("UserName")
         self.username_edit_text.setAccessibleName(q_edit_text_style[0])
         self.username_edit_text.setStyleSheet(q_edit_text_style[1])
 
         self.frame_layout.addWidget(self.username_edit_text)
 
         self.password_edit_text = QLineEdit()
-        self.password_edit_text.setPlaceholderText("Enter Password")
+        self.password_edit_text.setPlaceholderText("Password")
         self.password_edit_text.setAccessibleName(q_edit_text_style[0])
         self.password_edit_text.setStyleSheet(q_edit_text_style[1])
 
         self.frame_layout.addWidget(self.password_edit_text)
 
     def _add_btn_signup_(self):
-        btn_signup = QPushButton("sign up")
+        btn_signup = QPushButton("SignUp")
         btn_signup.setAccessibleName(btn_signup_style[0])
         btn_signup.setStyleSheet(btn_signup_style[1])
 
@@ -86,11 +86,31 @@ class SignUp(Observer, QWidget):
             from datetime import datetime
 
             try:
-                if username != "" and password != "":
+                if username != "" and password != "":                    
+                    from json import dumps as json_dumps
+                    
+                    self.socket_server.get_socket.sendall(json_dumps({
+                        "message": {
+                            "USERNAME": username,
+                            "PASSWORD": password
+                        },
+                        "params": {
+                            "USERNAME": username
+                        },
+                        "command": "[REGISTER]",
+                        "session": None,
+                        "route": {
+                            "group": "",
+                            "to": "server"
+                        },
+                        "option": None
+                    }).encode("utf-8"))
+                    
+                    # TODO: get response from server then do your reaction
+                    
                     User.create(
                         username=username,
-                        password=password,
-                        created_time=datetime.now()
+                        password=password
                     )
 
                     from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
@@ -114,7 +134,7 @@ class SignUp(Observer, QWidget):
         self.frame_layout.addWidget(btn_signup)
 
     def _add_btn_register_account_(self):
-        btn_goto_register_page = QPushButton("Register ?")
+        btn_goto_register_page = QPushButton("SignIn?")
         btn_goto_register_page.setAccessibleName(btn_goto_register_page_style[0])
         btn_goto_register_page.setStyleSheet(btn_goto_register_page_style[1])
         btn_goto_register_page.setContentsMargins(0, 0, 0, 0)
