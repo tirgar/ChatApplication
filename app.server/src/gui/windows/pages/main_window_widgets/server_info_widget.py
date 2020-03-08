@@ -12,6 +12,11 @@ from gui.styles.pages.main_window_widgets.server_info_widget_styles import *
 from interfaces.observer_pattern.observer import Observer
 from core.inner_concentrate.concentrate import ConcentrateSubject
 
+from json import (
+    loads as json_loads,
+    dumps as json_dumps
+)
+
 
 class ServerInfo(Observer, QWidget):
     """ this class make the server info inputs widget gui of server app """
@@ -85,12 +90,21 @@ class ServerInfo(Observer, QWidget):
                 # run server in background thread
                 self.socket_server.start()  # when we use start method actually we call run
 
+                _data = json_dumps({
+                    "message": "Connect to server",
+                    "to": "EDIT_LOGGER",
+                    "type_log": "SERVER_LOG"
+                })
+                self.concentrate_subject.notify(message=_data, to=json_loads(_data)["to"])
+
                 def send_data_concentrate(data):
-                    self.concentrate_subject.notify(message=data, to="SERVER_LOGS")
+                    self.concentrate_subject.notify(message=data, to=json_loads(data)["to"])
 
                 self.socket_server.signal.connect(send_data_concentrate)
-
-                print("Connect Success for running")
+                
+                self.server_ip_input.setReadOnly(True)
+                self.port_input.setReadOnly(True)
+                self.btn_connect.setEnabled(False)
 
         self.btn_connect.clicked.connect(on_clicked_connect)
 

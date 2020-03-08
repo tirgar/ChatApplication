@@ -33,7 +33,7 @@ class ServerLogs(Observer, QWidget):
     def class_name(self):
         """ this function return a class name to access in codes """
 
-        return "SERVER_LOGS"
+        return "EDIT_LOGGER"
 
     def __add_widget__(self):
         """ this function return a q-frame to use in main layout """
@@ -67,7 +67,7 @@ class ServerLogs(Observer, QWidget):
 
         incoming_message = json_loads(message)
 
-        if incoming_message["to"] == "SERVER_LOGS":
+        if incoming_message["type_log"] == "CLIENT_LOG":
 
             last_text = self.q_text_edit.toPlainText()
             self.q_text_edit.setText(
@@ -75,9 +75,13 @@ class ServerLogs(Observer, QWidget):
                 + " " + str(incoming_message["client_address"])
                 + ": " + incoming_message["message"]
             )
-        elif incoming_message["to"] == "table_widget":
-            print(message)
-
+        elif incoming_message["type_log"] == "SERVER_LOG":
+            last_text = self.q_text_edit.toPlainText()
+            self.q_text_edit.setText(
+                last_text + "\n" + str(datetime.now()).split(".")[0]
+                + " " + incoming_message["message"]
+            )
+            
     @property
     def signal(self):
         return self._signal

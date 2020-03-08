@@ -15,6 +15,8 @@ from core.inner_concentrate.concentrate import ConcentrateSubject
 
 class TableWidget(Observer, QWidget):
     """ this class make the server table widget gui of server app """
+    
+    client_sets: set = set()
 
     def __init__(self, parent=None, socket_server=None):
         super(TableWidget, self).__init__(parent=parent)
@@ -34,12 +36,10 @@ class TableWidget(Observer, QWidget):
         table_main_layout.addWidget(self.__add_widget__())
 
         self.setLayout(table_main_layout)
-        self.__add_info_to_table__()
 
     @property
     def class_name(self):
         """ this function return a class name to access in codes """
-
         return "TABLE_WIDGET"
 
     def __add_widget__(self):
@@ -76,15 +76,6 @@ class TableWidget(Observer, QWidget):
 
         return main_frame
 
-    def __add_info_to_table__(self):
-        """this function receive a data that come from client server and call the notification method
-        """
-
-        def send_data_concentrate(data):
-            self.concentrate_subject.notify(message=data, to="TABLE_WIDGET")
-
-        self.socket_server.signal.connect(send_data_concentrate)
-
     def notification(self, message):
         """ Receive update from subject
             :params message: incoming message
@@ -93,7 +84,7 @@ class TableWidget(Observer, QWidget):
 
         incoming_message = json_loads(message)
 
-        if incoming_message["to"] == "TABLE_WIDGET":
+        if incoming_message["type"] == "[ADD]":
 
             row_position = self.table_widget.rowCount()
             self.table_widget.insertRow(row_position)
@@ -102,6 +93,18 @@ class TableWidget(Observer, QWidget):
             self.table_widget.setItem(row_position, 1, QTableWidgetItem(incoming_message["message"]["name"]))
             self.table_widget.setItem(row_position, 2, QTableWidgetItem(incoming_message["message"]["port"]))
             self.table_widget.setItem(row_position, 3, QTableWidgetItem(incoming_message["message"]["system"]))
+            
+        elif incoming_message["type"] == "[REMOVE]":
+            model = self.table_widget.model()
+            for row in range(model.rowCount()):
+                ip_column = model.index(row, 0)
+                ip_column_text = str(model.data(ip_column))
+                port_column = model.index(row, 2)
+                port_column_text = str(model.data(port_column))
+
+                if incoming_message["message"][0] + ":" + str(incoming_message["message"][1]) == str(ip_column_text) + ":" + str(port_column_text):
+                    self.table_widget.removeRow(row)
+                    break
 
     @property
     def signal(self):

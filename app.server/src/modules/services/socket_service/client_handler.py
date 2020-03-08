@@ -22,22 +22,27 @@ class ClientHandler:
             json_message["command"] == "[FIRST]" and 
             json_message["route"]["to"] == "server"
         ):
-            try:
-                print(json_message)
-                new_message = {
-                    "system": json_message["option"]["sys_info"],
-                    "ip": self.client_address[0],
-                    "port": str(self.client_address[1]),
-                    "name": "new client"
-                }
-                data = json_dumps({
-                    "message": new_message,
-                    "to": "TABLE_WIDGET"
-                })
-                self._signal.emit(data)
+            new_message = {
+                "system": json_message["option"]["sys_info"],
+                "ip": self.client_address[0],
+                "port": str(self.client_address[1]),
+                "name": "new client"
+            }
+            data = json_dumps({
+                "message": new_message,
+                "to": "TABLE_WIDGET",
+                "type": "[ADD]"
+            })
+            self._signal.emit(data)
 
-            except Exception as error:
-                print(error)
+        elif (json_message["command"] == "[CLOSE]" and 
+            json_message["route"]["to"] == "server"):
+            data = json_dumps({
+                "message": self.client_address,
+                "to": "TABLE_WIDGET",
+                "type": "[REMOVE]"
+            })
+            self._signal.emit(data)
     
     def start(self):
         while True:

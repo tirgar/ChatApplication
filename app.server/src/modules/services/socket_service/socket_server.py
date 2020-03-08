@@ -46,13 +46,13 @@ class SocketServer(QThread):
             while True:
                 client_socket, client_address = self.socket_server.accept()
 
-                data_transfer = (
-                    json_dumps({
-                        "client_address": client_address,
-                        "message": "Connect to server",
-                        "to": "SERVER_LOGS"
-                    })
-                )
+                data_transfer = json_dumps({
+                    "client_address": client_address,
+                    "message": "Connect to server",
+                    "to": "EDIT_LOGGER",
+                    "type_log": "CLIENT_LOG"
+                })
+
                 self._signal.emit(data_transfer)
 
                 thr_pool.submit(self.serve_connections, client_socket, client_address)
