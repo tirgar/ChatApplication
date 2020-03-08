@@ -8,12 +8,12 @@ from PyQt5.QtWidgets import (
     QGroupBox, QGridLayout, QVBoxLayout
 )
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtCore import Qt
 
 from gui.styles.windows.main_window_style import *
 from interfaces.observer_pattern.observer import Observer
 from core.inner_concentrate.concentrate import ConcentrateSubject
 from gui.components.message_box import MessageBox
+from modules.services.socket_services.socket_service import SocketService
 
 
 class MainWindow(Observer, QMainWindow):
@@ -21,8 +21,8 @@ class MainWindow(Observer, QMainWindow):
         super(MainWindow, self).__init__(parent=parent)
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
-        # self.setLayoutDirection(Qt.RightToLeft)
-        self.socket_server = socket_server
+        self.parent = parent
+        self.socket_server = SocketService()
 
         self.setWindowTitle("main window")
         self.setAccessibleName(main_window_styles[0])

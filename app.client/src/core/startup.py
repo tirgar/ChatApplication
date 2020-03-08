@@ -8,6 +8,8 @@ from sys import (
 from PyQt5.QtWidgets import QApplication
 
 from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
+from gui.windows.window_handler.main_window_handler.main_auth_window import MainAuthWindow
+from modules.data.data_context import AppContext
 
 
 class StartUp:
@@ -30,7 +32,8 @@ class StartUp:
         """ start main gui application and other services
             :return:
         """
-        main_window = MainWindow(socket_server=self.socket_server)
+        AppContext()
+        main_window = MainAuthWindow(socket_server=self.socket_server)
         main_window.execute_app()
 
         sys_exit(self.app.exec_())
