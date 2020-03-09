@@ -40,15 +40,17 @@ class ClientHandler:
                 "to": "TABLE_WIDGET",
                 "type": "[REMOVE]"
             })
-
         elif (json_message["command"] == "[REGISTER]" and 
             json_message["route"]["to"] == "server"):
-            data = json_dumps({
-                "message": json_message,
-                "to": "DATABASE_ADAPTER",
-                "client_ip_port": self.client_address,
-                "type": "[ADD_USER]"
-            })
+            try:
+                data = json_dumps({
+                    "message": json_message,
+                    "to": "DATABASE_ADAPTER",
+                    "client_ip_port": self.client_address,
+                    "type": "[ADD_USER]"
+                })
+            except Exception as error:
+                print(error)
 
         self._signal.emit(data)
 

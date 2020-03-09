@@ -12,8 +12,9 @@ from platform import uname
 
 
 class CommandHandler:
-    def __init__(self, client_socket: socket):
+    def __init__(self, client_socket: socket, signal):
         self.client_socket = client_socket
+        self.signal = signal
         
     def __send_hi_message__(self) -> str:        
         return json_dumps({
@@ -32,4 +33,12 @@ class CommandHandler:
         
     def start(self):
         self.client_socket.sendall(self.__send_hi_message__().encode("utf-8"))
-        
+        while True:
+            incoming_message = json_loads(
+                self.client_socket.recv(8096).decode("utf-8")
+            )
+            data = json_dumps({
+                "message": incoming_message,
+                "to": "SIGN_UP"
+            })
+            self.signal.emit(data)
