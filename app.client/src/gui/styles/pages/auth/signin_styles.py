@@ -17,6 +17,15 @@ q_edit_text_style = ("q_edit_text_style", """
         margin-top: 20px;
         margin-left: 250px;
         padding: 10px;
+        font-size: 15px;
+        border-radius: 10px;
+        border: 1px solid white;
+    }
+    [accessibleName="q_edit_text_style"]:hover {
+        border-color: #00FFEB;
+    }
+    [accessibleName="q_edit_text_style"]:focus {
+        border-color: #00FFEB;
     }
 """)
 
@@ -29,6 +38,7 @@ btn_forgot_password_style = ("btn_forgot_password_style", """
         max-height: 20px;
         background-color: transparent;
         border: none;
+        font-size: 15px;
         margin-left: 350px;
     }
 """)
@@ -44,13 +54,15 @@ btn_login_style = ("btn_login_style", """
         margin-bottom: 100px;
         margin-left: 335px;
         margin-top: 50px;
-       
+        border-radius: 20px;
+        font-size: 15px;
     }
 """)
 
 btn_create_account_style = ("btn_create_account_style", """
     [accessibleName="btn_create_account_style"] {
         color: #194ef8;
+        font-size: 15px;
         min-width: 200px;
         max-width: 200px;
         min-height: 20px;

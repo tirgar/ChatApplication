@@ -14,6 +14,8 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 class SocketServer(QThread):
     
+    clients_set: set = set()
+    
     _signal = pyqtSignal(object)
     
     def __init__(self, parent=None):
@@ -23,6 +25,10 @@ class SocketServer(QThread):
         self.socket_server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         
         self.config_manager = ConfigManager()
+    
+    def get_client(self, client_ip_port: str):
+        for clien_objext in self.clients_set:
+            pass
     
     def try_binding(self, server_ip: str, server_port: int) -> tuple:
         """ trying to binding server with IP and Port inserted
@@ -45,7 +51,9 @@ class SocketServer(QThread):
         with ThreadPoolExecutor(500) as thr_pool:
             while True:
                 client_socket, client_address = self.socket_server.accept()
-
+                self.clients_set.add((
+                    client_socket, str(client_address[0] + ":" + str(client_address[1])
+                ))
                 data_transfer = json_dumps({
                     "client_address": client_address,
                     "message": "Connect to server",

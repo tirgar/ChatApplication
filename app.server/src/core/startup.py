@@ -8,6 +8,7 @@ from sys import (
 )
 from PyQt5.QtWidgets import QApplication
 from gui.windows.window_handlers.main_window_handler.mainwindow import MainWindow
+from .inner_concentrate.concentrate import ConcentrateSubject
 
 
 class StartUp:
@@ -16,10 +17,15 @@ class StartUp:
     def __init__(self):
         self.app = QApplication(sys_argv)
         self.init_services()
+        self.__add_adapters__()
     
     def init_services(self):
         from modules.services.socket_service.socket_server import SocketServer
         self.socket_server = SocketServer()
+
+    def __add_adapters__(self):
+        from modules.data.database_adapter import DataBaseAdapter
+        ConcentrateSubject().attach(DataBaseAdapter(self.socket_server))
 
     def start(self):
         """ start main gui application and other services

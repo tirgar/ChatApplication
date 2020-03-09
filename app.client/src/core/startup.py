@@ -27,6 +27,7 @@ class StartUp:
         from modules.services.socket_services.socket_service import SocketService
 
         self.socket_server = SocketService()
+        self.socket_server.start()
 
     def start(self):
         """ start main gui application and other services

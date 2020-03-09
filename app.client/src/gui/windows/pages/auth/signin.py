@@ -87,7 +87,7 @@ class SignIn(Observer, QWidget):
         self.frame_layout.addWidget(btn_forgot_password)
 
     def _add_btn_login_(self):
-        btn_login = QPushButton("Login")
+        btn_login = QPushButton("SingIn")
         btn_login.setAccessibleName(btn_login_style[0])
         btn_login.setStyleSheet(btn_login_style[1])
 

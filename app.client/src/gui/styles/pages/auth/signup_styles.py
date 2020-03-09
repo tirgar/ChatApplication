@@ -7,6 +7,7 @@ main_frame_styles = ("main_frame_styles", """
 q_edit_text_style = ("q_edit_text_style", """
     [accessibleName="q_edit_text_style"] {
         color: #ffffff;
+        border: 1px solid #fff;
         background-color: #252331;
         min-width: 300px;
         max-width: 300px;
@@ -16,6 +17,14 @@ q_edit_text_style = ("q_edit_text_style", """
         margin-bottom: 25px;
         margin-left: 250px;
         padding: 10px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+    [accessibleName="q_edit_text_style"]:hover {
+        border-color: #00FFEB;
+    }
+    [accessibleName="q_edit_text_style"]:focus {
+        border-color: #00FFEB;
     }
 """)
 
@@ -29,6 +38,8 @@ btn_signup_style = ("btn_signup_style", """
         max-width: 150px;
         background-color: #194ef8;
         margin-bottom: 180px;
+        font-size: 15px;
+        border-radius: 10px;
         margin-left: 335px;
     }
 """)
@@ -42,6 +53,7 @@ btn_goto_register_page_style = ("btn_goto_register_page_style", """
         max-height: 20px;
         background-color: transparent;
         border: none;
+        font-size: 15px;
         margin-left: 340px;
         margin-bottom: 20px;
     }
