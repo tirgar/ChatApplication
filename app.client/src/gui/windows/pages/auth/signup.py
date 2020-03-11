@@ -13,7 +13,13 @@ from gui.styles.pages.auth.signup_styles import *
 from gui.components.message_box import MessageBox
 from interfaces.observer_pattern.observer import Observer
 from core.inner_concentrate.concentrate import ConcentrateSubject
+from modules.data.data_context import User
 
+from json import (
+    dumps as json_dumps,
+    loads as json_loads
+)
+from datetime import datetime
 
 class SignUp(Observer, QWidget):
 
@@ -82,12 +88,8 @@ class SignUp(Observer, QWidget):
             username: str = self.username_edit_text.text()
             password: str = self.password_edit_text.text()
 
-            from modules.data.data_context import User
-            from datetime import datetime
-
             try:
                 if username != "" and password != "":                    
-                    from json import dumps as json_dumps
                     
                     self.socket_server.get_socket.sendall(json_dumps({
                         "message": {
@@ -105,19 +107,6 @@ class SignUp(Observer, QWidget):
                         },
                         "option": None
                     }).encode("utf-8"))
-                    
-                    # TODO: get response from server then do your reaction
-                    
-                    User.create(
-                        username=username,
-                        password=password
-                    )
-
-                    from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
-                    main_window = MainWindow(self.parent, self.socket_server)
-                    self.parent.hide()
-                    main_window.execute_app()
-
                 else:
                     MessageBox(
                         title="Error",
@@ -155,3 +144,17 @@ class SignUp(Observer, QWidget):
 
     def set_sign_in_page(self, signin: object):
         self.signin_page = signin
+
+    def notification(self, message):
+        incoming_message = json_loads(message)
+        
+        if incoming_message["message"]["code"] == 200:
+            User.create(
+                username=self.username_edit_text.text(),
+                password=self.password_edit_text.text()
+            )
+
+            from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
+            main_window = MainWindow(self.parent, socket_server=self.socket_server)
+            self.parent.hide()
+            main_window.execute_app()

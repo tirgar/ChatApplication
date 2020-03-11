@@ -49,7 +49,9 @@ class SocketService(QThread):
 
     def run(self):
         self.__try_connecting_to_server__()
-        CommandHandler(client_socket=self.sock).start()        
+        CommandHandler(
+            client_socket=self.sock, signal=self._signal
+        ).start()
 
     @property
     def signal(self):

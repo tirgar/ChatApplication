@@ -9,6 +9,7 @@ from sys import (
 from PyQt5.QtWidgets import QApplication
 from gui.windows.window_handlers.main_window_handler.mainwindow import MainWindow
 from .inner_concentrate.concentrate import ConcentrateSubject
+from modules.data.data_context import AppContext
 
 
 class StartUp:
@@ -31,6 +32,7 @@ class StartUp:
         """ start main gui application and other services
             :return:
         """
+        AppContext()
         main_window = MainWindow(socket_server=self.socket_server)
         main_window.execute_app()
         

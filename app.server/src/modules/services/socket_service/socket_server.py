@@ -27,8 +27,9 @@ class SocketServer(QThread):
         self.config_manager = ConfigManager()
     
     def get_client(self, client_ip_port: str):
-        for clien_objext in self.clients_set:
-            pass
+        for client_object in self.clients_set:
+            if client_ip_port == client_object[1]:
+                return client_object[0]  # return client object socket
     
     def try_binding(self, server_ip: str, server_port: int) -> tuple:
         """ trying to binding server with IP and Port inserted
@@ -51,9 +52,12 @@ class SocketServer(QThread):
         with ThreadPoolExecutor(500) as thr_pool:
             while True:
                 client_socket, client_address = self.socket_server.accept()
+                # client_address => ('ip', int(port))
+                
                 self.clients_set.add((
-                    client_socket, str(client_address[0] + ":" + str(client_address[1])
+                    client_socket, str(client_address[0] + ":" + str(client_address[1]))
                 ))
+
                 data_transfer = json_dumps({
                     "client_address": client_address,
                     "message": "Connect to server",

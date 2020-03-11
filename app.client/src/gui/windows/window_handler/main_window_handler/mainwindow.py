@@ -18,9 +18,7 @@ from modules.services.socket_services.socket_service import SocketService
 
 class MainWindow(Observer, QMainWindow):
     def __init__(self, parent=None, socket_server=None):
-        super(MainWindow, self).__init__(parent=parent)
-        self.concentrate_subject = ConcentrateSubject()
-        self.concentrate_subject.attach(self)
+        super(MainWindow, self).__init__(parent=parent)        
         self.parent = parent
 
         self.setWindowTitle("main window")
@@ -28,16 +26,10 @@ class MainWindow(Observer, QMainWindow):
         self.setStyleSheet(main_window_styles[1])
                 
         self.__set_main_widget__()
-        self.__signal_to_socket__()
 
     @property
     def class_name(self):
         return "MAIN_WINDOW"
-
-    def __signal_to_socket__(self):
-        def send_data_concentrate(data):
-            self.concentrate_subject.notify(message=data, to="MAIN_WINDOW")
-        self.socket_server.signal.connect(send_data_concentrate)
 
     def notification(self, message):
         """ Receive update from subject
