@@ -37,8 +37,7 @@ class StartUp:
         """
 
         def send_data_concentrate(data):
-            from json import loads as json_loads    
-            print(data)
+            from json import loads as json_loads
             self.concentrate_subject.notify(message=data, to=json_loads(data)["to"])
         
         self.socket_server.signal.connect(send_data_concentrate)

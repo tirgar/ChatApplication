@@ -37,8 +37,18 @@ class CommandHandler:
             incoming_message = json_loads(
                 self.client_socket.recv(8096).decode("utf-8")
             )
-            data = json_dumps({
-                "message": incoming_message,
-                "to": "SIGN_UP"
-            })
-            self.signal.emit(data)
+            
+            print(incoming_message)
+            
+            if incoming_message["command"] == "[REGISTER]":
+                data = json_dumps({
+                    "message": incoming_message,
+                    "to": "SIGN_UP"
+                })
+                self.signal.emit(data)
+            elif incoming_message["command"] == "[LOGIN]":
+                data = json_dumps({
+                    "message": incoming_message,
+                    "to": "SIGN_IN"
+                })
+                self.signal.emit(data)

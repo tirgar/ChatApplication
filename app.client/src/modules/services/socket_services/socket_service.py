@@ -32,10 +32,7 @@ class SocketService(QThread):
         """ this function try connecting to server
            :param:
            :return:
-        """
-
-        print("[+] Try connecting to server ..")
-    
+        """  
         response_code = self.sock.connect_ex((
             self.config_manager.get.socket_server.IP,
             self.config_manager.get.socket_server.PORT,

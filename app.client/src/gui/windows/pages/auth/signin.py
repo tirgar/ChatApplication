@@ -15,6 +15,9 @@ from gui.components.message_box import MessageBox
 from interfaces.observer_pattern.observer import Observer
 from core.inner_concentrate.concentrate import ConcentrateSubject
 
+from json import (dumps as json_dumps, loads as json_loads)
+from platform import uname
+
 
 class SignIn(Observer, QWidget):
 
@@ -23,6 +26,8 @@ class SignIn(Observer, QWidget):
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
         self.socket_server = socket_server
+        
+        self.check_user_pass()
 
         # self.setLayoutDirection(Qt.RightToLeft)
         self.setContentsMargins(0, 0, 0, 0)
@@ -38,6 +43,27 @@ class SignIn(Observer, QWidget):
 
         self.main_layout.addWidget(self.main_frame)
         self.setLayout(self.main_layout)
+
+    def check_user_pass(self):
+        last_user = User.select()
+        if len(last_user) > 0:
+            last_user = last_user[len(last_user) - 1]
+            if last_user != None:
+                data = json_dumps({
+                    "message": {
+                        "username": last_user.username,
+                        "password": last_user.password
+                    },
+                    "command": "[LOGIN]",
+                    "session": None,
+                    "option": None,
+                    "route": {
+                        "group": "",
+                        "to": "server"
+                    },
+                })
+
+                self.socket_server.get_socket.sendall(data.encode("utf-8"))
 
     @property
     def class_name(self):
@@ -100,21 +126,23 @@ class SignIn(Observer, QWidget):
                     user = User.select().where(
                         (User.username == username) & (User.password == password)
                     )
-                    from json import (dumps as json_dumps, loads as json_loads)
-                    user_name = username
-                    data = json_dumps({
-                        "message": {"username": user_name},
-                        "command": "[INFO]",
-                        "session": "",
-                        "route": {
-                            "group": "",
-                            "to": "server"
-                        },
-                    })
-
-                    self.socket_server.get_socket.sendall(data.encode("utf-8"))
-
                     if len(user) > 0:
+                        data = json_dumps({
+                            "message": "",
+                            "command": "[LOGIN_INF]",
+                            "session": "",
+                            "option": {
+                                "sys_info": str(uname().system),
+                                "username": username
+                            },
+                            "route": {
+                                "group": "",
+                                "to": "server"
+                            },
+                        })
+
+                        self.socket_server.get_socket.sendall(data.encode("utf-8"))
+                        
                         from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
                         main_window = MainWindow(self.parent, self.socket_server)
                         self.parent.hide()
@@ -163,3 +191,31 @@ class SignIn(Observer, QWidget):
 
     def set_sign_up_page(self, signup: object):
         self.signup_page = signup
+
+    def notification(self, message):
+        incoming_message = json_loads(message)
+        last_user = User.select()
+        last_user = last_user[len(last_user) - 1]
+        if incoming_message["message"]["code"] == 200:
+            data = json_dumps({
+                "message": "",
+                "command": "[LOGIN_INF]",
+                "session": "",
+                "option": {
+                    "sys_info": str(uname().system),
+                    "username": last_user.username
+                },
+                "route": {
+                    "group": "",
+                    "to": "server"
+                },
+            })
+
+            self.socket_server.get_socket.sendall(data.encode("utf-8"))
+
+            from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
+            main_window = MainWindow(self.parent, socket_server=self.socket_server)
+            self.parent.hide()
+            main_window.execute_app()
+        else:
+            return
