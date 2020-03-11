@@ -19,51 +19,47 @@ class ClientHandler:
         json_message = json_loads(message)
         
         if (
-            json_message["command"] == "[FIRST]" and 
+            json_message["command"] == "[LOGIN_INF]" and 
             json_message["route"]["to"] == "server"
-        ):
-            new_message = {
-                "system": json_message["option"]["sys_info"],
-                "ip": self.client_address[0],
-                "port": str(self.client_address[1]),
-                "name": "new client"
-            }                              # TODO get user name
-            data = json_dumps({
-                "message": new_message,
+        ):            
+            self._signal.emit(json_dumps({
+                "message": {
+                    "system": json_message["option"]["sys_info"],
+                    "ip": self.client_address[0],
+                    "port": str(self.client_address[1]),
+                    "name": json_message["option"]["username"]
+                },
                 "to": "TABLE_WIDGET",
                 "type": "[ADD]"
-            })
+            }))
+        
         elif (json_message["command"] == "[CLOSE]" and 
             json_message["route"]["to"] == "server"):
-            data = json_dumps({
+            
+            self._signal.emit(json_dumps({
                 "message": self.client_address,
                 "to": "TABLE_WIDGET",
                 "type": "[REMOVE]"
-            })
+            }))
+        
         elif (json_message["command"] == "[REGISTER]" and 
             json_message["route"]["to"] == "server"):
-            try:
-                data = json_dumps({
-                    "message": json_message,
-                    "to": "DATABASE_ADAPTER",
-                    "client_ip_port": self.client_address,
-                    "type": "[ADD_USER]"
-                })
-            except Exception as error:
-                print(error)
-        elif (json_message["command"] == "[INFO]" and
-              json_message["route"]["to"] == "server"):
-            try:
-                data = json_dumps({
-                    "message": json_message,
-                    "to": "TABLE_WIDGET",
-                    "client_ip_port": self.client_address,
-                    "type": "[USER_INFO]"
-                })
-            except Exception as error:
-                print(error)
-
-        self._signal.emit(data)
+            self._signal.emit(json_dumps({
+                "message": json_message,
+                "to": "DATABASE_ADAPTER",
+                "client_ip_port": self.client_address,
+                "type": "[ADD_USER]"
+            }))
+            
+        elif (json_message["command"] == "[LOGIN]" and
+            json_message["route"]["to"] == "server"):
+            
+            self._signal.emit(json_dumps({
+                "message": json_message,
+                "client_ip_port": self.client_address,
+                "to": "DATABASE_ADAPTER",
+                "type": "[LOGIN]"
+            }))
 
     def start(self):
         while True:

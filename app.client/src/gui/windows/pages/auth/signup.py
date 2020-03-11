@@ -19,6 +19,7 @@ from json import (
     dumps as json_dumps,
     loads as json_loads
 )
+from platform import uname
 
 
 class SignUp(Observer, QWidget):
@@ -153,12 +154,16 @@ class SignUp(Observer, QWidget):
                 username=self.username_edit_text.text(),
                 password=self.password_edit_text.text()
             )
-
+                        
             user_name = self.username_edit_text.text()
             data = json_dumps({
-                "message": {"username": user_name},
-                "command": "[INFO]",
+                "message": "",
+                "command": "[LOGIN_INF]",
                 "session": "",
+                "option": {
+                    "sys_info": str(uname().system),
+                    "username": self.username_edit_text.text()
+                },
                 "route": {
                     "group": "",
                     "to": "server"

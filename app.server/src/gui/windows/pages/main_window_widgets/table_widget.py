@@ -85,7 +85,6 @@ class TableWidget(Observer, QWidget):
         incoming_message = json_loads(message)
 
         if incoming_message["type"] == "[ADD]":
-
             self.row_position = self.table_widget.rowCount()
             self.table_widget.insertRow(self.row_position)
 
@@ -107,13 +106,3 @@ class TableWidget(Observer, QWidget):
 
                     self.table_widget.removeRow(row)
                     break
-
-        elif incoming_message["type"] == "[USER_INFO]":
-
-            self.table_widget.setItem(
-                self.row_position, 1, QTableWidgetItem(incoming_message["message"]["message"]["username"])
-            )
-
-    @property
-    def signal(self):
-        return self._signal
