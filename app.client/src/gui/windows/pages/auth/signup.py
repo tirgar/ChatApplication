@@ -19,7 +19,7 @@ from json import (
     dumps as json_dumps,
     loads as json_loads
 )
-from datetime import datetime
+
 
 class SignUp(Observer, QWidget):
 
@@ -154,7 +154,24 @@ class SignUp(Observer, QWidget):
                 password=self.password_edit_text.text()
             )
 
+            user_name = self.username_edit_text.text()
+            data = json_dumps({
+                "message": {"username": user_name},
+                "command": "[INFO]",
+                "session": "",
+                "route": {
+                    "group": "",
+                    "to": "server"
+                },
+            })
+
+            self.socket_server.get_socket.sendall(data.encode("utf-8"))
+
             from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
             main_window = MainWindow(self.parent, socket_server=self.socket_server)
             self.parent.hide()
             main_window.execute_app()
+
+    @property
+    def signal(self):
+        return self._signal

@@ -86,13 +86,13 @@ class TableWidget(Observer, QWidget):
 
         if incoming_message["type"] == "[ADD]":
 
-            row_position = self.table_widget.rowCount()
-            self.table_widget.insertRow(row_position)
+            self.row_position = self.table_widget.rowCount()
+            self.table_widget.insertRow(self.row_position)
 
-            self.table_widget.setItem(row_position, 0, QTableWidgetItem(incoming_message["message"]["ip"]))
-            self.table_widget.setItem(row_position, 1, QTableWidgetItem(incoming_message["message"]["name"]))
-            self.table_widget.setItem(row_position, 2, QTableWidgetItem(incoming_message["message"]["port"]))
-            self.table_widget.setItem(row_position, 3, QTableWidgetItem(incoming_message["message"]["system"]))
+            self.table_widget.setItem(self.row_position, 0, QTableWidgetItem(incoming_message["message"]["ip"]))
+            self.table_widget.setItem(self.row_position, 1, QTableWidgetItem(incoming_message["message"]["name"]))
+            self.table_widget.setItem(self.row_position, 2, QTableWidgetItem(incoming_message["message"]["port"]))
+            self.table_widget.setItem(self.row_position, 3, QTableWidgetItem(incoming_message["message"]["system"]))
             
         elif incoming_message["type"] == "[REMOVE]":
             model = self.table_widget.model()
@@ -102,9 +102,17 @@ class TableWidget(Observer, QWidget):
                 port_column = model.index(row, 2)
                 port_column_text = str(model.data(port_column))
 
-                if incoming_message["message"][0] + ":" + str(incoming_message["message"][1]) == str(ip_column_text) + ":" + str(port_column_text):
+                if incoming_message["message"][0] + ":" + str(incoming_message["message"][1]) ==\
+                        str(ip_column_text) + ":" + str(port_column_text):
+
                     self.table_widget.removeRow(row)
                     break
+
+        elif incoming_message["type"] == "[USER_INFO]":
+
+            self.table_widget.setItem(
+                self.row_position, 1, QTableWidgetItem(incoming_message["message"]["message"]["username"])
+            )
 
     @property
     def signal(self):

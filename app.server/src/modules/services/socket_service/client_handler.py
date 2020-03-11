@@ -27,7 +27,7 @@ class ClientHandler:
                 "ip": self.client_address[0],
                 "port": str(self.client_address[1]),
                 "name": "new client"
-            }
+            }                              # TODO get user name
             data = json_dumps({
                 "message": new_message,
                 "to": "TABLE_WIDGET",
@@ -48,6 +48,17 @@ class ClientHandler:
                     "to": "DATABASE_ADAPTER",
                     "client_ip_port": self.client_address,
                     "type": "[ADD_USER]"
+                })
+            except Exception as error:
+                print(error)
+        elif (json_message["command"] == "[INFO]" and
+              json_message["route"]["to"] == "server"):
+            try:
+                data = json_dumps({
+                    "message": json_message,
+                    "to": "TABLE_WIDGET",
+                    "client_ip_port": self.client_address,
+                    "type": "[USER_INFO]"
                 })
             except Exception as error:
                 print(error)

@@ -20,6 +20,7 @@ class MainWindow(Observer, QMainWindow):
     def __init__(self, parent=None, socket_server=None):
         super(MainWindow, self).__init__(parent=parent)        
         self.parent = parent
+        self.socket_server = socket_server
 
         self.setWindowTitle("main window")
         self.setAccessibleName(main_window_styles[0])

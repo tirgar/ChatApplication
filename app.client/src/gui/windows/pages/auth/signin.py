@@ -100,6 +100,20 @@ class SignIn(Observer, QWidget):
                     user = User.select().where(
                         (User.username == username) & (User.password == password)
                     )
+                    from json import (dumps as json_dumps, loads as json_loads)
+                    user_name = username
+                    data = json_dumps({
+                        "message": {"username": user_name},
+                        "command": "[INFO]",
+                        "session": "",
+                        "route": {
+                            "group": "",
+                            "to": "server"
+                        },
+                    })
+
+                    self.socket_server.get_socket.sendall(data.encode("utf-8"))
+
                     if len(user) > 0:
                         from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
                         main_window = MainWindow(self.parent, self.socket_server)
