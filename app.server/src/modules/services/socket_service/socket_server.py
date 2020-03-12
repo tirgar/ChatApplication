@@ -31,6 +31,15 @@ class SocketServer(QThread):
             if client_ip_port == client_object[1]:
                 return client_object[0]  # return client object socket
     
+    @property
+    def get_all_clients(self):
+        return self.clients_set
+    
+    def delete_client_from_cliets_set(self, client_ip_port):
+        for item in self.clients_set:
+            if item[1] == client_ip_port:
+                self.clients_set.discard(item)
+    
     def try_binding(self, server_ip: str, server_port: int) -> tuple:
         """ trying to binding server with IP and Port inserted
             :return tuple: (bool, str) => binding status
