@@ -29,7 +29,6 @@ class SignIn(Observer, QWidget):
         
         self.check_user_pass()
 
-        # self.setLayoutDirection(Qt.RightToLeft)
         self.setContentsMargins(0, 0, 0, 0)
 
         self.parent = parent
@@ -101,7 +100,6 @@ class SignIn(Observer, QWidget):
         self.password_edit_text.setAccessibleName(q_edit_text_style[0])
         self.password_edit_text.setStyleSheet(q_edit_text_style[1])
 
-        # self.main_layout.addWidget(self.password_edit_text)
         self.frame_layout.addWidget(self.password_edit_text)
 
     def _add_forgot_password_(self):
@@ -165,7 +163,7 @@ class SignIn(Observer, QWidget):
                 ).show()
 
         btn_login.clicked.connect(btn_login_clicked)
-        # self.main_layout.addWidget(btn_login)
+
         self.frame_layout.addWidget(btn_login)
 
     def _add_btn_create_account_(self):
@@ -219,3 +217,7 @@ class SignIn(Observer, QWidget):
             main_window.execute_app()
         else:
             return
+
+    @property
+    def signal(self):
+        return self._signal

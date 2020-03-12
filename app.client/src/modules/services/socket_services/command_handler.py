@@ -9,6 +9,7 @@ from json import (
     dumps as json_dumps
 )
 from platform import uname
+from time import sleep
 
 
 class CommandHandler:
@@ -49,6 +50,20 @@ class CommandHandler:
             elif incoming_message["command"] == "[LOGIN]":
                 data = json_dumps({
                     "message": incoming_message,
+                    "to": "USER_LIST"
+                })
+                self.signal.emit(data)
+                sleep(0.1)
+                data = json_dumps({
+                    "message": incoming_message,
                     "to": "SIGN_IN"
                 })
                 self.signal.emit(data)
+                # sleep(0.1)
+
+
+
+
+
+
+

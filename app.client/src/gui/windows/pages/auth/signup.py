@@ -154,8 +154,7 @@ class SignUp(Observer, QWidget):
                 username=self.username_edit_text.text(),
                 password=self.password_edit_text.text()
             )
-                        
-            user_name = self.username_edit_text.text()
+
             data = json_dumps({
                 "message": "",
                 "command": "[LOGIN_INF]",
@@ -169,6 +168,8 @@ class SignUp(Observer, QWidget):
                     "to": "server"
                 },
             })
+
+            self.signal.emit(data)
 
             self.socket_server.get_socket.sendall(data.encode("utf-8"))
 

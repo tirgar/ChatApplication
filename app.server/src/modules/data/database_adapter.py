@@ -35,8 +35,12 @@ class DataBaseAdapter(Observer):
                     created_time=datetime.now(),
                     is_online=True
                 )
+                username = incoming_message["message"]["message"]["USERNAME"]
                 client_socket.sendall(json_dumps({
                     "message": "User created successfully",
+                    "option": {"username": username,
+                               "is_online": True
+                               },
                     "command": "[REGISTER]",
                     "code": 200  # this code means ok result
                 }).encode("utf-8"))
@@ -53,8 +57,12 @@ class DataBaseAdapter(Observer):
             )
             
             if authenticated.exists():
+                username = incoming_message["message"]["message"]["username"]
                 client_socket.sendall(json_dumps({
                     "message": "Authenticated",
+                    "option": {"username": username,
+                               "is_online": True
+                               },
                     "command": "[LOGIN]",
                     "code": 200  # this code means ok result
                 }).encode("utf-8"))
