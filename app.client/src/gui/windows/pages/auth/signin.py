@@ -26,7 +26,7 @@ class SignIn(Observer, QWidget):
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
         self.socket_server = socket_server
-        
+
         self.check_user_pass()
 
         self.setContentsMargins(0, 0, 0, 0)
@@ -47,7 +47,7 @@ class SignIn(Observer, QWidget):
         last_user = User.select()
         if len(last_user) > 0:
             last_user = last_user[len(last_user) - 1]
-            if last_user != None:
+            if last_user is not None:
                 data = json_dumps({
                     "message": {
                         "username": last_user.username,
@@ -140,7 +140,7 @@ class SignIn(Observer, QWidget):
                         })
 
                         self.socket_server.get_socket.sendall(data.encode("utf-8"))
-                        
+
                         from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
                         main_window = MainWindow(self.parent, self.socket_server)
                         self.parent.hide()
@@ -178,7 +178,7 @@ class SignIn(Observer, QWidget):
 
         btn_create_account.clicked.connect(clicked_create_account)
 
-        #self.main_layout.addWidget(btn_create_account)
+        # self.main_layout.addWidget(btn_create_account)
         self.frame_layout.addWidget(btn_create_account)
 
     def set_visibility(self, visible: bool):
@@ -208,8 +208,9 @@ class SignIn(Observer, QWidget):
                     "to": "server"
                 },
             })
-
             self.socket_server.get_socket.sendall(data.encode("utf-8"))
+
+            self.concentrate_subject.notify(incoming_message, to="USER_LIST")
 
             from gui.windows.window_handler.main_window_handler.mainwindow import MainWindow
             main_window = MainWindow(self.parent, socket_server=self.socket_server)

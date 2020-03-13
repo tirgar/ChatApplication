@@ -22,83 +22,71 @@ from json import (dumps as json_dumps, loads as json_loads)
 
 class UserListWidget(Observer, QWidget):
     
-    def __init__(self, parent=None):
-        super(UserListWidget, self).__init__(parent=parent)
+    def __init__(self):
+        super(UserListWidget, self).__init__()
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
-        self.users_list: List = list()
 
         self.setAccessibleName(main_widget_styles[0])
         self.setStyleSheet(main_widget_styles[1])
-    
-        self.main_layout = QVBoxLayout(self)
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_layout.setStretch(0, 0)
+        self.__init_ui__()
 
-        self.setLayout(self.main_layout)
+    def __init_ui__(self):
+        self.scroll_layout = QFormLayout()
+        self.scroll_layout.setContentsMargins(10, 10, 10, 10)
+        self.scroll_layout.setSpacing(0)
 
+        self.scroll_widget = QWidget()
+        self.scroll_widget.setAccessibleName(main_scroll_holder_frame[0])
+        self.scroll_widget.setStyleSheet(main_scroll_holder_frame[1])
+        self.scroll_widget.setLayout(self.scroll_layout)
 
-        self.__add_scroll_area__()
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setAccessibleName(scroll_layout_styles[0])
+        self.scroll_area.setStyleSheet(scroll_layout_styles[1])
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setWidget(self.scroll_widget)
+
+    def get_scroll_widget(self):
+        return self.scroll_area
 
     @property
     def class_name(self):
         return "USER_LIST"
     
-    def __add_scroll_area__(self):
-        main_frame = QFrame()
-        main_frame.setContentsMargins(10, 10, 10, 10)
-        main_frame.setAccessibleName(main_scroll_holder_frame[0])
-        main_frame.setStyleSheet(main_scroll_holder_frame[1])
-        form_layout = QFormLayout()
-        form_layout.setContentsMargins(0, 0, 0, 0)
+    def __add_scroll_area__(self, username):
+        sub_frame = QFrame()
+        sub_frame.setContentsMargins(0, 0, 0, 0)
 
-        # for i in range(len(users)):
-        for user in self.users_list:
-            sub_frame = QFrame()
-            sub_frame.setContentsMargins(0, 0, 0, 0)
+        sub_frame.setAccessibleName(sub_qframe_styles[0])
+        sub_frame.setStyleSheet(sub_qframe_styles[1])
 
-            sub_frame.setAccessibleName(sub_qframe_styles[0])
-            sub_frame.setStyleSheet(sub_qframe_styles[1])
+        user_profile_layout = QHBoxLayout()
+        user_profile_layout.setContentsMargins(0, 0, 0, 0)
 
-            user_profile_layout = QHBoxLayout()
-            user_profile_layout.setContentsMargins(0, 0, 0, 0)
+        self.username_icon = QPushButton()
+        self.username_icon.setContentsMargins(0, 0, 0, 0)
+        self.username_icon.setAccessibleName(username_icon_styles[0])
+        self.username_icon.setStyleSheet(username_icon_styles[1])
+        icon = QIcon('./assets/user.png')
+        self.username_icon.setIcon(icon)
+        self.username_icon.setIconSize(QSize(40, 40))
 
-            self.username_icon = QPushButton()
-            self.username_icon.setContentsMargins(0, 0, 0, 0)
-            self.username_icon.setAccessibleName(username_icon_styles[0])
-            self.username_icon.setStyleSheet(username_icon_styles[1])
-            icon = QIcon('./assets/user.png')
-            self.username_icon.setIcon(icon)
-            self.username_icon.setIconSize(QSize(40, 40))
+        self.username_label = QLabel(username)
+        self.username_label.setContentsMargins(0, 0, 0, 0)
+        self.username_label.setAccessibleName(username_label_styles[0])
+        self.username_label.setStyleSheet(username_label_styles[1])
 
-            self.username_label = QLabel(user)
-            self.username_label.setContentsMargins(0, 0, 0, 0)
-            self.username_label.setAccessibleName(username_label_styles[0])
-            self.username_label.setStyleSheet(username_label_styles[1])
+        user_profile_layout.addWidget(self.username_icon)
+        user_profile_layout.addWidget(self.username_label)
 
-            user_profile_layout.addWidget(self.username_icon)
-            user_profile_layout.addWidget(self.username_label)
+        sub_frame.setLayout(user_profile_layout)
 
-            sub_frame.setLayout(user_profile_layout)
-
-            form_layout.addRow(sub_frame)
-
-        main_frame.setLayout(form_layout)
-        
-        scroll = QScrollArea()
-        scroll.setAccessibleName(scroll_layout_styles[0])
-        scroll.setStyleSheet(scroll_layout_styles[1])
-        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll.setWidget(main_frame)
-        scroll.setWidgetResizable(True)
-        
-        self.main_layout.addWidget(scroll)
+        self.scroll_layout.addRow(sub_frame)
 
     def notification(self, message):
-        incoming_message = json_loads(message)
-        self.users_list.append(incoming_message["message"]["option"]["username"])
-        print(self.users_list)
-        # return self.users_list
+        for item in message["message"]["option"]["online_users"]:
+            self.__add_scroll_area__(item["username"])
 
 

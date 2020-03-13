@@ -67,10 +67,10 @@ class MainWindow(Observer, QMainWindow):
 
         from ...pages.main_window_widgets.users_list_widgets import UserListWidget
         from ...pages.main_window_widgets.chat_main_widget import ChatMainWidget
-        user_widget_main = UserListWidget(parent=self)
+        user_widget_main = UserListWidget()
         chat_main_widget = ChatMainWidget(parent=self)
 
-        layout.addWidget(user_widget_main, 0, 0)
+        layout.addWidget(user_widget_main.get_scroll_widget(), 0, 0)
         layout.addWidget(chat_main_widget, 0, 1)
 
         self.horizontalGroupBox.setLayout(layout)
@@ -91,4 +91,3 @@ class MainWindow(Observer, QMainWindow):
             },
             "option": None
         }).encode("utf-8"))
-        
