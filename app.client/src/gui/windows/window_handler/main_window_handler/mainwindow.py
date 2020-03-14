@@ -14,6 +14,8 @@ from interfaces.observer_pattern.observer import Observer
 from core.inner_concentrate.concentrate import ConcentrateSubject
 from gui.components.message_box import MessageBox
 from modules.services.socket_services.socket_service import SocketService
+from ...pages.main_window_widgets.users_list_widgets import UserListWidget
+from ...pages.main_window_widgets.chat_main_widget import ChatMainWidget
 
 
 class MainWindow(Observer, QMainWindow):
@@ -21,6 +23,8 @@ class MainWindow(Observer, QMainWindow):
         super(MainWindow, self).__init__(parent=parent)        
         self.parent = parent
         self.socket_server = socket_server
+
+        self.user_widget_main = UserListWidget(self)
 
         self.setWindowTitle("main window")
         self.setAccessibleName(main_window_styles[0])
@@ -65,12 +69,9 @@ class MainWindow(Observer, QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        from ...pages.main_window_widgets.users_list_widgets import UserListWidget
-        from ...pages.main_window_widgets.chat_main_widget import ChatMainWidget
-        user_widget_main = UserListWidget()
         chat_main_widget = ChatMainWidget(parent=self)
 
-        layout.addWidget(user_widget_main.get_scroll_widget(), 0, 0)
+        layout.addWidget(self.user_widget_main.get_scroll_widget(), 0, 0)
         layout.addWidget(chat_main_widget, 0, 1)
 
         self.horizontalGroupBox.setLayout(layout)

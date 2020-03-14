@@ -22,8 +22,8 @@ from json import (dumps as json_dumps, loads as json_loads)
 
 class UserListWidget(Observer, QWidget):
     
-    def __init__(self):
-        super(UserListWidget, self).__init__()
+    def __init__(self, parent=None):
+        super(UserListWidget, self).__init__(parent=parent)
         self.concentrate_subject = ConcentrateSubject()
         self.concentrate_subject.attach(self)
 
@@ -34,7 +34,7 @@ class UserListWidget(Observer, QWidget):
     def __init_ui__(self):
         self.scroll_layout = QFormLayout()
         self.scroll_layout.setContentsMargins(10, 10, 10, 10)
-        self.scroll_layout.setSpacing(0)
+        self.scroll_layout.setSpacing(10)
 
         self.scroll_widget = QWidget()
         self.scroll_widget.setAccessibleName(main_scroll_holder_frame[0])
@@ -45,6 +45,7 @@ class UserListWidget(Observer, QWidget):
         self.scroll_area.setAccessibleName(scroll_layout_styles[0])
         self.scroll_area.setStyleSheet(scroll_layout_styles[1])
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.scroll_widget)
 
@@ -56,6 +57,7 @@ class UserListWidget(Observer, QWidget):
         return "USER_LIST"
     
     def __add_scroll_area__(self, username):
+        print(username)
         sub_frame = QFrame()
         sub_frame.setContentsMargins(0, 0, 0, 0)
 
@@ -88,5 +90,3 @@ class UserListWidget(Observer, QWidget):
     def notification(self, message):
         for item in message["message"]["option"]["online_users"]:
             self.__add_scroll_area__(item["username"])
-
-
